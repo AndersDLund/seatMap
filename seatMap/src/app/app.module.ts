@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ScrollEventModule } from 'ngx-scroll-event';
 
 import { AppComponent } from './app.component';
 import { AndersMapComponent } from './anders-map/anders-map.component';
@@ -21,7 +20,6 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(appRoutes),
     BrowserModule,
-    ScrollEventModule
   ],
   providers: [],
   bootstrap: [AppComponent]

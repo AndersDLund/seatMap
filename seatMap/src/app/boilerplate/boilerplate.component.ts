@@ -26,7 +26,7 @@ export class BoilerplateComponent implements OnInit {
     this.camera.position.set(0, 5, 2);
     this.scene.add(this.camera);
     this.geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-    this.material = new THREE.MeshBasicMaterial({color: 0xFF0000});
+    // this.material = new THREE.MeshBasicMaterial();
     for (let i = 0; i <= 10; i++) {
       this.box = new THREE.Mesh(this.geometry, this.material);
       this.box.position.y = i;
