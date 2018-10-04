@@ -10,10 +10,19 @@ export class AndersMapComponent implements OnInit {
   scene: any = new THREE.Scene();
   renderer: any;
   camera: any;
+  otherCamera: any;
   light: any;
   controls: any;
   box: any;
   sun: any;
+
+  dxPerFrame: number = .01;
+
+  planeFront: any;
+  planeFrontGeometry: any;
+  fv1: any;
+  fv2: any;
+  fv3: any;
 
   planeWing: any;
   planeWingGeometry: any;
@@ -29,6 +38,14 @@ export class AndersMapComponent implements OnInit {
 
   sunGeometry: any;
   sunMaterial: any;
+
+  cloudGeometry: any;
+  cloudMaterial: any;
+  cloud1: any;
+  cloud2: any;
+  cloud3: any;
+  cloud4: any;
+
   geometry: any;
   material: any;
 
@@ -37,6 +54,7 @@ export class AndersMapComponent implements OnInit {
   }
   ngOnInit() {
     this.scene.background = new THREE.Color('lightblue');
+    // this.scene.fog = new THREE.Fog('black', 1, 2);
     // window.addEventListener('scroll', this.onMouseWheel, false);
     // window.addEventListener('touchstart', this.touched, false);
     this.renderer = new THREE.WebGLRenderer();
@@ -47,18 +65,44 @@ export class AndersMapComponent implements OnInit {
     this.camera.position.z = 16;
     this.camera.position.y = 5;
     this.camera.position.x = 7;
+
+    this.otherCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    this.otherCamera.position.z = 100;
+    this.otherCamera.position.y = 5;
+    this.otherCamera.position.x = 7;
     // console.log(this.camera);
     this.scene.add(this.camera);
+    this.scene.add(this.otherCamera);
+
+    setTimeout(() => {
+      console.log('change camera!');
+      console.log(this.scene);
+      this.scene.activeCamera = this.otherCamera;
+    }, 5000);
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
     this.material = new THREE.MeshNormalMaterial();
 
-    this.sunGeometry = new THREE.SphereGeometry( 3, 20, 20 );
-    this.sunMaterial = new THREE.MeshNormalMaterial({});
+    this.sunGeometry = new THREE.SphereGeometry(3, 20, 20);
+    this.sunMaterial = new THREE.MeshNormalMaterial();
+
+    this.cloudGeometry = new THREE.SphereGeometry(1, 10, 10);
+    this.cloudMaterial = new THREE.MeshNormalMaterial();
 
     this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
     this.engineMaterial = new THREE.MeshNormalMaterial();
 
-    this.planeWingGeometry = new THREE.Geometry( 200, 200, 200 );
+    this.planeFrontGeometry = new THREE.Geometry(100, 100, 100);
+    this.fv1 = new THREE.Vector3(5, 0, 0);
+    this.fv2 = new THREE.Vector3(-7, 0, 0);
+    this.fv3 = new THREE.Vector3(0, 7, 0);
+
+    this.planeFrontGeometry.vertices.push(this.fv1);
+    this.planeFrontGeometry.vertices.push(this.fv2);
+    this.planeFrontGeometry.vertices.push(this.fv3);
+
+    this.planeFrontGeometry.faces.push(new THREE.Face3(0, 2, 1));
+
+    this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
     this.planeWingMaterial = new THREE.MeshNormalMaterial();
     this.v1 = new THREE.Vector3(10, 0, 0);
     this.v2 = new THREE.Vector3(-7, 0, 0);
@@ -74,8 +118,30 @@ export class AndersMapComponent implements OnInit {
     this.planeWing.position.x = 2.7;
     this.planeWing.position.y = -1;
     this.planeWing.position.z = 1;
-   this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
     this.scene.add(this.planeWing);
+
+    this.planeFront = new THREE.Mesh(this.planeFrontGeometry, this.planeWingMaterial);
+    this.planeFront.position.x = 2.7;
+    this.planeFront.position.y = -1;
+    this.planeFront.position.z = -1;
+    this.planeFront.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI * 2);
+    //  this.planeFront.rotation.z = 90;
+    this.scene.add(this.planeFront);
+
+    this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud1.position.x = -4.5;
+    this.cloud1.position.y = 6.2;
+    // this.cloud1.position.z = 12;
+    this.cloud2 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud2.position.x = -5.2;
+    this.cloud2.position.y = 5;
+    // this.cloud2.position.z = 12;
+    this.cloud3 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud3.position.x = -3.8;
+    this.cloud3.position.y = 5;
+    // this.cloud3.position.z = 12;
+    this.scene.add(this.cloud1, this.cloud2, this.cloud3);
 
 
     this.engine = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
@@ -129,14 +195,14 @@ export class AndersMapComponent implements OnInit {
     // this.scene.add(this.planeWing);
 
     for (let i = 0; i <= 10; i++) {
-      for (let j = 1; j <= 5; j++ ) {
+      for (let j = 1; j <= 5; j++) {
         if (j === 3) {
           continue;
         } else {
-      this.box = new THREE.Mesh(this.geometry, this.material);
-      this.box.position.z = i;
-      this.box.position.x = j;
-      this.scene.add(this.box);
+          this.box = new THREE.Mesh(this.geometry, this.material);
+          this.box.position.z = i;
+          this.box.position.x = j;
+          this.scene.add(this.box);
         }
       }
     }
@@ -152,6 +218,11 @@ export class AndersMapComponent implements OnInit {
   }
 
   render() {
+    this.cloud1.position.x += this.dxPerFrame;
+    this.cloud2.position.x += this.dxPerFrame;
+    this.cloud3.position.x += this.dxPerFrame;
+    if (this.cloud1.position.x > 40 || this.cloud2.position.x > 40 || this.cloud3.position.x > 40) { this.dxPerFrame = -.01; }
+    if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
     // this.renderer = this.renderer;
@@ -171,17 +242,17 @@ export class AndersMapComponent implements OnInit {
   // this.controls.update();
 
 
-// }
+  // }
 
 
 
-// render() {
-//   console.log(this.renderer, 'renderererererere');
-//   // this.renderer.bind(this);
-//   this.renderer.render(this.scene, this.camera);
-//   // this.stats.update();
+  // render() {
+  //   console.log(this.renderer, 'renderererererere');
+  //   // this.renderer.bind(this);
+  //   this.renderer.render(this.scene, this.camera);
+  //   // this.stats.update();
 
-// }
+  // }
 
   // onMouseWheel(event) {
   //   this.camera = new THREE.PerspectiveCamera(700, window.innerWidth / window.innerHeight, 0.01, 10);
