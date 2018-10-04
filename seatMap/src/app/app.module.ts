@@ -7,7 +7,7 @@ import { AndersMapComponent } from './anders-map/anders-map.component';
 import { BoilerplateComponent } from './boilerplate/boilerplate.component';
 
 const appRoutes: Routes = [
-  {path: 'seatmap', component: AndersMapComponent},
+  {path: '', component: AndersMapComponent},
   { path: 'boilerplate', component: BoilerplateComponent }
 ];
 
