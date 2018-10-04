@@ -14,6 +14,16 @@ export class AndersMapComponent implements OnInit {
   controls: any;
   box: any;
   sun: any;
+
+  planeWing: any;
+  planeWingGeometry: any;
+  planeWingMaterial: any;
+  v1: any;
+  v2: any;
+  v3: any;
+
+  sunGeometry: any;
+  sunMaterial: any;
   geometry: any;
   material: any;
 
@@ -29,13 +39,38 @@ export class AndersMapComponent implements OnInit {
     console.log(this.renderer);
     document.body.appendChild(this.renderer.domElement);
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    this.camera.position.z = 13;
+    this.camera.position.z = 16;
     this.camera.position.y = 5;
     this.camera.position.x = 7;
     // console.log(this.camera);
     this.scene.add(this.camera);
-    this.geometry = new THREE.BoxGeometry(.5, .5, .5);
+    this.geometry = new THREE.BoxGeometry(.5, .7, .3);
     this.material = new THREE.MeshNormalMaterial();
+
+    this.sunGeometry = new THREE.SphereGeometry( 3, 20, 20 );
+    this.sunMaterial = new THREE.MeshNormalMaterial({});
+
+    this.planeWingGeometry = new THREE.Geometry( 200, 200, 200 );
+    this.planeWingMaterial = new THREE.MeshNormalMaterial({});
+    this.v1 = new THREE.Vector3(10, 0, 0);
+    this.v2 = new THREE.Vector3(-7, 0, 0);
+    this.v3 = new THREE.Vector3(0, 7, 0);
+
+    this.planeWingGeometry.vertices.push(this.v1);
+    this.planeWingGeometry.vertices.push(this.v2);
+    this.planeWingGeometry.vertices.push(this.v3);
+
+    this.planeWingGeometry.faces.push(new THREE.Face3(0, 2, 1));
+
+    this.planeWing = new THREE.Mesh(this.planeWingGeometry, this.planeWingMaterial);
+    this.planeWing.position.x = 2.7;
+    this.planeWing.position.y = -1;
+    this.planeWing.position.z = 1;
+   this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    this.scene.add(this.planeWing);
+
+    // this.light = new THREE.pointLight(0xffffff);
+
 
     this.controls = new TrackballControls(this.camera, this.renderer.domElement);
     console.log(this.controls);
@@ -55,20 +90,31 @@ export class AndersMapComponent implements OnInit {
 
     this.controls.keys = [65, 83, 68];
 
-    this.controls.addEventListener('change', this.render);
+    window.addEventListener('change', this.render);
 
-    this.sun = new THREE.Mesh(this.geometry, this.material);
-    this.sun.position.z = 12;
-    this.sun.position.x = 12;
-    this.sun.position.y = 12;
-    this.scene.add(this.box);
+    this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
+    this.sun.position.x = -20;
+    this.sun.position.y = 11;
+    this.sun.position.z = -7;
+    this.scene.add(this.sun);
+
+    // this.planeWing = new THREE.Mesh(this.planeWingGeometry, this.planeWingMaterial);
+    // this.planeWing.position.x = -7;
+    // this.planeWing.position.y = -3;
+    // this.planeWing.position.z = -2;
+    // this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    // this.scene.add(this.planeWing);
 
     for (let i = 0; i <= 10; i++) {
-      for (let j = 1; j <= 3; j++ ) {
+      for (let j = 1; j <= 5; j++ ) {
+        if (j === 3) {
+          continue;
+        } else {
       this.box = new THREE.Mesh(this.geometry, this.material);
       this.box.position.z = i;
       this.box.position.x = j;
       this.scene.add(this.box);
+        }
       }
     }
 
@@ -83,14 +129,18 @@ export class AndersMapComponent implements OnInit {
   }
 
   render() {
-    // this.box.rotation.y += 0.01;
-    // this.box.rotation.x += 0.01;
+    this.sun.rotation.y += 0.001;
+    this.sun.rotation.x += 0.001;
     // this.renderer = this.renderer;
     // console.log(this.renderer, 'renderererer');
+
+
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this.render.bind(this));
     this.controls.update();
   }
+
+  de2ra = function (degree) { return degree * (Math.PI / 180); };
 
   // animate() {
 
