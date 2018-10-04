@@ -14,6 +14,7 @@ export class AndersMapComponent implements OnInit {
   controls: any;
   box: any;
   sun: any;
+  objects: Array<any>;
 
   planeWing: any;
   planeWingGeometry: any;
@@ -114,6 +115,7 @@ export class AndersMapComponent implements OnInit {
     this.controls.keys = [65, 83, 68];
 
     window.addEventListener('change', this.render);
+    window.addEventListener('click', this.onClick);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -162,6 +164,21 @@ export class AndersMapComponent implements OnInit {
     requestAnimationFrame(this.render.bind(this));
     this.controls.update();
   }
+
+  onClick(event): void {
+    const projector = new THREE.Projector();
+
+    const mouse = new THREE.Vector2();
+    // console.log(this.renderer.domElement);
+    mouse.x = (event.clientX / this.renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = - (event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
+    // projector.unprojectVector(mouse, this.camera);
+    const raycaster = new THREE.Raycaster(this.camera.position, mouse.sub(this.camera.position).normalize());
+    raycaster.setFromCamera(mouse, this.camera);
+    const intersects = raycaster.intersectObjects(this.objects);
+    console.log(intersects);
+  }
+
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
