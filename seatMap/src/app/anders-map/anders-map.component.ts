@@ -22,6 +22,11 @@ export class AndersMapComponent implements OnInit {
   v2: any;
   v3: any;
 
+  engine: any;
+  engine1: any;
+  engineGeometry: any;
+  engineMaterial: any;
+
   sunGeometry: any;
   sunMaterial: any;
   geometry: any;
@@ -50,8 +55,11 @@ export class AndersMapComponent implements OnInit {
     this.sunGeometry = new THREE.SphereGeometry( 3, 20, 20 );
     this.sunMaterial = new THREE.MeshNormalMaterial({});
 
+    this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
+    this.engineMaterial = new THREE.MeshNormalMaterial();
+
     this.planeWingGeometry = new THREE.Geometry( 200, 200, 200 );
-    this.planeWingMaterial = new THREE.MeshNormalMaterial({});
+    this.planeWingMaterial = new THREE.MeshNormalMaterial();
     this.v1 = new THREE.Vector3(10, 0, 0);
     this.v2 = new THREE.Vector3(-7, 0, 0);
     this.v3 = new THREE.Vector3(0, 7, 0);
@@ -68,6 +76,21 @@ export class AndersMapComponent implements OnInit {
     this.planeWing.position.z = 1;
    this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
     this.scene.add(this.planeWing);
+
+
+    this.engine = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
+    this.engine.position.x = -4;
+    this.engine.position.y = -2;
+    this.engine.position.z = 3;
+    this.engine.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    this.scene.add(this.engine);
+
+    this.engine1 = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
+    this.engine1.position.x = 8;
+    this.engine1.position.y = -2.7;
+    this.engine1.position.z = 1.5;
+    this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI - .15);
+    this.scene.add(this.engine1);
 
     // this.light = new THREE.pointLight(0xffffff);
 
