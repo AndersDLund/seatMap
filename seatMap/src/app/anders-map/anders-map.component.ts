@@ -73,17 +73,16 @@ export class AndersMapComponent implements OnInit {
     // this.raycaster = new THREE.Raycaster(), INTERSECTED;
     this.mouse = new THREE.Vector2();
     // this.mouse = { x: 0, y: 0 };
-    console.log(this.mouse, 'mouseeeeeeeee');
     // this.intersects = this.raycaster.intersectObjects(this.scene.children);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    console.log(renderer);
     document.body.appendChild(renderer.domElement);
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 16;
     camera.position.y = 5;
     camera.position.x = 7;
+
     raycaster = new THREE.Raycaster();
 
     this.otherCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
@@ -95,12 +94,10 @@ export class AndersMapComponent implements OnInit {
     this.scene.add(this.otherCamera);
 
     setTimeout(() => {
-      console.log('change camera!');
-      console.log(this.scene);
       this.scene.activeCamera = this.otherCamera;
     }, 5000);
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
-    this.material = new THREE.MeshNormalMaterial();
+    this.material = new THREE.MeshLambertMaterial();
 
     this.sunGeometry = new THREE.SphereGeometry(3, 20, 20);
     this.sunMaterial = new THREE.MeshNormalMaterial();
@@ -182,7 +179,6 @@ export class AndersMapComponent implements OnInit {
 
 
     this.controls = new TrackballControls(camera, renderer.domElement);
-    console.log(this.controls);
     this.controls.rotateSpeed = 2.0;
     this.controls.zoomSpeed = 1.2;
     this.controls.panSpeed = 0.8;
@@ -226,7 +222,7 @@ export class AndersMapComponent implements OnInit {
           this.box = new THREE.Mesh(this.geometry, this.material);
           this.box.position.z = i;
           this.box.position.x = j;
-          seatGroup.add(this.box);
+          seatGroup.children.push(this.box);
           this.scene.add(this.box);
         }
       }
@@ -261,6 +257,7 @@ export class AndersMapComponent implements OnInit {
       if (INTERSECTED !== intersects[0].object) {
         if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
         INTERSECTED = intersects[0].object;
+        console.log(INTERSECTED.material);
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
         // setting up new material on hover
         INTERSECTED.material.emissive.setHex(Math.random() * 0xff00000 - 0xff00000);
@@ -315,10 +312,12 @@ console.log(seatGroup.children);
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(seatGroup.children);
-  if (intersects.length > 0) {
-    // get a link from the userData object
-    window.open(intersects[0].object.userData.URL);
-  }
+  console.log(intersects);
+
+  // if (intersects.length > 0) {
+  //   // get a link from the userData object
+  //   window.open(intersects[0].object.userData.URL);
+  // }
 }
 
 
