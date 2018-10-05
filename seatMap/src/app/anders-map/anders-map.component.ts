@@ -17,12 +17,11 @@ let renderer;
 })
 export class AndersMapComponent implements OnInit {
   scene: any = new THREE.Scene();
-  // renderer: any;
-  // camera: any;
   otherCamera: any;
   light: any;
   controls: any;
   box: any;
+  seatMaterials: Array<any>;
   sun: any;
   objects: Array<any>;
 
@@ -59,7 +58,6 @@ export class AndersMapComponent implements OnInit {
   geometry: any;
   material: any;
 
-  // raycaster: any;
   mouse: any;
   intersects: any;
 
@@ -67,14 +65,7 @@ export class AndersMapComponent implements OnInit {
   }
   ngOnInit() {
     this.scene.background = new THREE.Color('lightblue');
-    // this.scene.fog = new THREE.Fog('black', 1, 2);
-    // window.addEventListener('scroll', this.onMouseWheel, false);
-    // window.addEventListener('touchstart', this.touched, false);
-    // this.raycaster = new THREE.Raycaster(), INTERSECTED;
     this.mouse = new THREE.Vector2();
-    // this.mouse = { x: 0, y: 0 };
-    // this.intersects = this.raycaster.intersectObjects(this.scene.children);
-
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -174,7 +165,8 @@ export class AndersMapComponent implements OnInit {
     this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI - .15);
     this.scene.add(this.engine1);
 
-    // this.light = new THREE.pointLight(0xffffff);
+    this.light = new THREE.AmbientLight(0x404040, 3);
+    this.scene.add(this.light);
 
 
     this.controls = new TrackballControls(camera, renderer.domElement);
@@ -197,8 +189,6 @@ export class AndersMapComponent implements OnInit {
     window.addEventListener('change', this.render);
     window.addEventListener('resize', this.onWindowResize, false);
     document.addEventListener('click', this.onDocumentMouseDown, false);
-    // window.addEventListener('click', this.onClick);
-    // this.renderer.domElement.addEventListener('click', this.raycast, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -206,19 +196,30 @@ export class AndersMapComponent implements OnInit {
     this.sun.position.z = -7;
     this.scene.add(this.sun);
 
-    // this.planeWing = new THREE.Mesh(this.planeWingGeometry, this.planeWingMaterial);
-    // this.planeWing.position.x = -7;
-    // this.planeWing.position.y = -3;
-    // this.planeWing.position.z = -2;
-    // this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
-    // this.scene.add(this.planeWing);
+    this.seatMaterials = [
+      new THREE.MeshLambertMaterial({ color: 0xff0000}),
+      new THREE.MeshLambertMaterial({ color: 0x00ff00}),
+      new THREE.MeshLambertMaterial({ color: 0x0000ff}),
+      new THREE.MeshLambertMaterial({ color: 0xffff00}),
+      new THREE.MeshLambertMaterial({ color: 0xff00ff}),
+      new THREE.MeshLambertMaterial({ color: 0x00ffff}),
+  ];
+
     seatGroup = new THREE.Object3D();
+    this.geometry = new THREE.BoxGeometry(.5, .7, .3);
+    this.geometry.faces[0].color.setHex(0xff0000);
+    this.geometry.faces[1].color.setHex(0xff0000);
+    this.geometry.faces[2].color.setHex(0x0000ff);
+    this.geometry.faces[3].color.setHex(0x0000ff);
+    this.geometry.faces[4].color.setHex(0xff00ff);
+    this.geometry.faces[5].color.setHex(0xff00ff);
+
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
         if (j === 3) {
           continue;
         } else {
-          this.box = new THREE.Mesh(this.geometry, this.material);
+          this.box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors}));
           this.box.position.z = i;
           this.box.position.x = j;
           seatGroup.children.push(this.box);
@@ -227,13 +228,6 @@ export class AndersMapComponent implements OnInit {
       }
     }
     this.render();
-    // this.animate();
-  }
-
-  // tslint:disable-next-line:use-life-cycle-interface
-  ngAfterViewInit() {
-    // this.scene.add(this.box);
-    // this.renderer = this.renderer;
   }
 
   render() {
@@ -244,7 +238,6 @@ export class AndersMapComponent implements OnInit {
     if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
-    // this.renderer = this.renderer;
 
     raycaster.setFromCamera(mouse, camera);
     // calculate objects intersecting the picking ray
@@ -256,12 +249,12 @@ export class AndersMapComponent implements OnInit {
         INTERSECTED = intersects[0].object;
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
         // setting up new material on hover
-        INTERSECTED.material.emissive.setHex(Math.random() * 0xff00000 - 0xff00000);
+        INTERSECTED.material.emissive.setHex(0xffffff);
       }
-    } else {
-      if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-      }
-      INTERSECTED = null;
+       } else {
+        if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+       }
+        INTERSECTED = null;
     }
 
 
@@ -270,34 +263,6 @@ export class AndersMapComponent implements OnInit {
     this.controls.update();
   }
 
-//  raycast(e) {
-//   //  this.mouse = { x: 0, y: 0 };
-//    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-//    this.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
-
-//      this.raycaster.setFromCamera(this.mouse, this.camera);
-
-//     for (let i = 0; i < this.intersects.length; i++) {
-
-//       this.intersects[i].object.material.color.set(0xff0000);
-
-//     }
-//  }
-
-  onMouseMove(event) {
-
-  // calculate mouse position in normalized device coordinates
-  // (-1 to +1) for both components
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-
-     this.intersects = raycaster.intersectObjects(this.scene.children);
-
-    for (let i = 0; i < this.intersects.length; i++) {
-    }
-}
 
 onDocumentMouseDown(event) {
 
@@ -306,11 +271,6 @@ onDocumentMouseDown(event) {
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(seatGroup.children);
-
-  // if (intersects.length > 0) {
-  //   // get a link from the userData object
-  //   window.open(intersects[0].object.userData.URL);
-  // }
 }
 
 
