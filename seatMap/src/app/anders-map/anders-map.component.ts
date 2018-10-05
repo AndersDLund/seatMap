@@ -1,6 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
+import { ThenableWebDriver } from 'selenium-webdriver';
+
+let raycaster;
+let INTERSECTED;
+const mouse = new THREE.Vector2();
+let seatGroup;
+let camera;
+let renderer;
+
 @Component({
   selector: 'app-anders-map',
   templateUrl: './anders-map.component.html',
@@ -8,8 +17,8 @@ import TrackballControls from 'three-trackballcontrols';
 })
 export class AndersMapComponent implements OnInit {
   scene: any = new THREE.Scene();
-  renderer: any;
-  camera: any;
+  // renderer: any;
+  // camera: any;
   otherCamera: any;
   light: any;
   controls: any;
@@ -50,29 +59,39 @@ export class AndersMapComponent implements OnInit {
   geometry: any;
   material: any;
 
-  constructor() {
+  // raycaster: any;
+  mouse: any;
+  intersects: any;
 
+  constructor() {
   }
   ngOnInit() {
     this.scene.background = new THREE.Color('lightblue');
     // this.scene.fog = new THREE.Fog('black', 1, 2);
     // window.addEventListener('scroll', this.onMouseWheel, false);
     // window.addEventListener('touchstart', this.touched, false);
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    console.log(this.renderer);
-    document.body.appendChild(this.renderer.domElement);
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    this.camera.position.z = 16;
-    this.camera.position.y = 5;
-    this.camera.position.x = 7;
+    // this.raycaster = new THREE.Raycaster(), INTERSECTED;
+    this.mouse = new THREE.Vector2();
+    // this.mouse = { x: 0, y: 0 };
+    console.log(this.mouse, 'mouseeeeeeeee');
+    // this.intersects = this.raycaster.intersectObjects(this.scene.children);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    console.log(renderer);
+    document.body.appendChild(renderer.domElement);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = 16;
+    camera.position.y = 5;
+    camera.position.x = 7;
+    raycaster = new THREE.Raycaster();
 
     this.otherCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
     this.otherCamera.position.z = 100;
     this.otherCamera.position.y = 5;
     this.otherCamera.position.x = 7;
     // console.log(this.camera);
-    this.scene.add(this.camera);
+    this.scene.add(camera);
     this.scene.add(this.otherCamera);
 
     setTimeout(() => {
@@ -162,7 +181,7 @@ export class AndersMapComponent implements OnInit {
     // this.light = new THREE.pointLight(0xffffff);
 
 
-    this.controls = new TrackballControls(this.camera, this.renderer.domElement);
+    this.controls = new TrackballControls(camera, renderer.domElement);
     console.log(this.controls);
     this.controls.rotateSpeed = 2.0;
     this.controls.zoomSpeed = 1.2;
@@ -181,7 +200,10 @@ export class AndersMapComponent implements OnInit {
     this.controls.keys = [65, 83, 68];
 
     window.addEventListener('change', this.render);
-    window.addEventListener('click', this.onClick);
+    window.addEventListener('resize', this.onWindowResize, false);
+    document.addEventListener('click', this.onDocumentMouseDown, false);
+    // window.addEventListener('click', this.onClick);
+    // this.renderer.domElement.addEventListener('click', this.raycast, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -195,7 +217,7 @@ export class AndersMapComponent implements OnInit {
     // this.planeWing.position.z = -2;
     // this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
     // this.scene.add(this.planeWing);
-
+    seatGroup = new THREE.Object3D();
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
         if (j === 3) {
@@ -204,11 +226,12 @@ export class AndersMapComponent implements OnInit {
           this.box = new THREE.Mesh(this.geometry, this.material);
           this.box.position.z = i;
           this.box.position.x = j;
+          seatGroup.add(this.box);
           this.scene.add(this.box);
         }
       }
     }
-
+    console.log(seatGroup, 'seatGroup');
     this.render();
     // this.animate();
   }
@@ -230,25 +253,73 @@ export class AndersMapComponent implements OnInit {
     // this.renderer = this.renderer;
     // console.log(this.renderer, 'renderererer');
 
+    raycaster.setFromCamera(mouse, camera);
+    // calculate objects intersecting the picking ray
+    const intersects = raycaster.intersectObjects(seatGroup.children);
+    // count and look after all objects in the diamonds group
+    if (intersects.length > 0) {
+      if (INTERSECTED !== intersects[0].object) {
+        if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
+        INTERSECTED = intersects[0].object;
+        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+        // setting up new material on hover
+        INTERSECTED.material.emissive.setHex(Math.random() * 0xff00000 - 0xff00000);
+      }
+    } else {
+      if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+      }
+      INTERSECTED = null;
+    }
 
-    this.renderer.render(this.scene, this.camera);
+
+    renderer.render(this.scene, camera);
     requestAnimationFrame(this.render.bind(this));
     this.controls.update();
   }
 
-  onClick(event): void {
-    const projector = new THREE.Projector();
+//  raycast(e) {
+//   //  this.mouse = { x: 0, y: 0 };
+//    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+//    this.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
 
-    const mouse = new THREE.Vector2();
-    // console.log(this.renderer.domElement);
-    mouse.x = (event.clientX / this.renderer.domElement.clientWidth) * 2 - 1;
-    mouse.y = - (event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
-    // projector.unprojectVector(mouse, this.camera);
-    const raycaster = new THREE.Raycaster(this.camera.position, mouse.sub(this.camera.position).normalize());
-    raycaster.setFromCamera(mouse, this.camera);
-    const intersects = raycaster.intersectObjects(this.objects);
-    console.log(intersects);
+//      this.raycaster.setFromCamera(this.mouse, this.camera);
+
+//     for (let i = 0; i < this.intersects.length; i++) {
+
+//       this.intersects[i].object.material.color.set(0xff0000);
+
+//     }
+//  }
+
+  onMouseMove(event) {
+
+  // calculate mouse position in normalized device coordinates
+  // (-1 to +1) for both components
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+     this.intersects = raycaster.intersectObjects(this.scene.children);
+
+    for (let i = 0; i < this.intersects.length; i++) {
+      console.log(this.intersects[i]);
+    }
+}
+
+onDocumentMouseDown(event) {
+console.log(seatGroup.children);
+
+  event.preventDefault();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(seatGroup.children);
+  if (intersects.length > 0) {
+    // get a link from the userData object
+    window.open(intersects[0].object.userData.URL);
   }
+}
 
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
@@ -283,6 +354,12 @@ export class AndersMapComponent implements OnInit {
   //   console.log(this.camera);
   //   this.camera.position.y -= event.deltaY * 0.005;
   // }
+
+  onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.updateProjectionMatrix();
+}
 
   // onWindowResize() {
   //   this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
