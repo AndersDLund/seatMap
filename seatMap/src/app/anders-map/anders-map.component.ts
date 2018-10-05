@@ -89,7 +89,6 @@ export class AndersMapComponent implements OnInit {
     this.otherCamera.position.z = 100;
     this.otherCamera.position.y = 5;
     this.otherCamera.position.x = 7;
-    // console.log(this.camera);
     this.scene.add(camera);
     this.scene.add(this.otherCamera);
 
@@ -227,7 +226,6 @@ export class AndersMapComponent implements OnInit {
         }
       }
     }
-    console.log(seatGroup, 'seatGroup');
     this.render();
     // this.animate();
   }
@@ -247,7 +245,6 @@ export class AndersMapComponent implements OnInit {
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
     // this.renderer = this.renderer;
-    // console.log(this.renderer, 'renderererer');
 
     raycaster.setFromCamera(mouse, camera);
     // calculate objects intersecting the picking ray
@@ -257,7 +254,6 @@ export class AndersMapComponent implements OnInit {
       if (INTERSECTED !== intersects[0].object) {
         if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
         INTERSECTED = intersects[0].object;
-        console.log(INTERSECTED.material);
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
         // setting up new material on hover
         INTERSECTED.material.emissive.setHex(Math.random() * 0xff00000 - 0xff00000);
@@ -300,19 +296,16 @@ export class AndersMapComponent implements OnInit {
      this.intersects = raycaster.intersectObjects(this.scene.children);
 
     for (let i = 0; i < this.intersects.length; i++) {
-      console.log(this.intersects[i]);
     }
 }
 
 onDocumentMouseDown(event) {
-console.log(seatGroup.children);
 
   event.preventDefault();
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(seatGroup.children);
-  console.log(intersects);
 
   // if (intersects.length > 0) {
   //   // get a link from the userData object
@@ -323,36 +316,7 @@ console.log(seatGroup.children);
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
-  // animate() {
 
-  // requestAnimationFrame(this.animate.bind(this));
-  // this.controls.update();
-
-
-  // }
-
-
-
-  // render() {
-  //   console.log(this.renderer, 'renderererererere');
-  //   // this.renderer.bind(this);
-  //   this.renderer.render(this.scene, this.camera);
-  //   // this.stats.update();
-
-  // }
-
-  // onMouseWheel(event) {
-  //   this.camera = new THREE.PerspectiveCamera(700, window.innerWidth / window.innerHeight, 0.01, 10);
-  //   event.preventDefault();
-  //   this.camera.position.y -= event.deltaY * 0.005;
-  //   this.camera.position.clampScalar(0, 10);
-
-  // }
-
-  // touched(event) {
-  //   console.log(this.camera);
-  //   this.camera.position.y -= event.deltaY * 0.005;
-  // }
 
   onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -360,17 +324,4 @@ console.log(seatGroup.children);
   camera.updateProjectionMatrix();
 }
 
-  // onWindowResize() {
-  //   this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-  //   this.camera.aspect = window.innerWidth / window.innerHeight;
-  //   this.camera.updateProjectionMatrix();
-  //   this.renderer.setSize(window.innerWidth, window.innerHeight);
-  // }
-
-  // public handleScroll(event: ScrollEvent ) {
-  //   console.log('cool');
-  //   this.camera.position.y -= event * 0.005;
-  //   this.camera.position.clampScalar(0, 10);
-  //   console.log(this.camera.position);
-  // }
 }
