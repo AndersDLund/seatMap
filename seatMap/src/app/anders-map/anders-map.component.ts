@@ -9,6 +9,7 @@ const mouse = new THREE.Vector2();
 let seatGroup;
 let camera;
 let renderer;
+let box;
 
 @Component({
   selector: 'app-anders-map',
@@ -20,7 +21,7 @@ export class AndersMapComponent implements OnInit {
   otherCamera: any;
   light: any;
   controls: any;
-  box: any;
+  // box: any;
   seatMaterials: Array<any>;
   sun: any;
   objects: Array<any>;
@@ -86,6 +87,7 @@ export class AndersMapComponent implements OnInit {
     setTimeout(() => {
       this.scene.activeCamera = this.otherCamera;
     }, 5000);
+
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
     this.material = new THREE.MeshLambertMaterial();
 
@@ -188,7 +190,7 @@ export class AndersMapComponent implements OnInit {
 
     window.addEventListener('change', this.render);
     window.addEventListener('resize', this.onWindowResize, false);
-    document.addEventListener('click', this.onDocumentMouseDown, false);
+    document.addEventListener('mousemove', this.onMouseMove, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -219,11 +221,16 @@ export class AndersMapComponent implements OnInit {
         if (j === 3) {
           continue;
         } else {
-          this.box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors}));
-          this.box.position.z = i;
-          this.box.position.x = j;
-          seatGroup.children.push(this.box);
-          this.scene.add(this.box);
+          box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors}));
+          box.name = i + '-' + j;
+          box.position.z = i;
+          box.position.x = j;
+          // box.addEventListener('click', this.onDocumentMouseDown, false);
+          box.callback = function() {
+            console.log(this.name);
+          };
+          seatGroup.children.push(box);
+          this.scene.add(box);
         }
       }
     }
@@ -250,6 +257,7 @@ export class AndersMapComponent implements OnInit {
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
         // setting up new material on hover
         INTERSECTED.material.emissive.setHex(0xffffff);
+        intersects[0].object.callback();
       }
        } else {
         if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
@@ -265,12 +273,19 @@ export class AndersMapComponent implements OnInit {
 
 
 onDocumentMouseDown(event) {
-
+  console.log(box.name);
   event.preventDefault();
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  // mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(seatGroup.children);
+}
+
+onMouseMove(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  // set up camera position
+  // camera.lookAt(this.scene.position);
 }
 
 
