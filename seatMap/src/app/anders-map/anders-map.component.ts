@@ -21,6 +21,11 @@ export class AndersMapComponent implements OnInit {
   otherCamera: any;
   light: any;
   controls: any;
+  loader: any;
+
+  text: any;
+  textGeometry: any;
+  textMaterial: any;
   // box: any;
   seatMaterials: Array<any>;
   sun: any;
@@ -74,6 +79,20 @@ export class AndersMapComponent implements OnInit {
     camera.position.z = 16;
     camera.position.y = 5;
     camera.position.x = 7;
+
+    this.loader = new THREE.FontLoader();
+    this.loader.load('/examples/fonts/helvetiker_regular.typeface.json', function( font ) {
+      this.textGeometry = new THREE.TextGeometry(box.name, {
+        font: font,
+        size: 80,
+        height: 5,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelSegments: 5
+      });
+    });
 
     raycaster = new THREE.Raycaster();
 
