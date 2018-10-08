@@ -228,25 +228,35 @@ export class AndersMapComponent implements OnInit {
 
     seatGroup = new THREE.Object3D();
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
-    this.geometry.faces[0].color.setHex(0xff0000);
-    this.geometry.faces[1].color.setHex(0xff0000);
-    this.geometry.faces[2].color.setHex(0x0000ff);
-    this.geometry.faces[3].color.setHex(0x0000ff);
-    this.geometry.faces[4].color.setHex(0xff00ff);
-    this.geometry.faces[5].color.setHex(0xff00ff);
+    this.geometry.faces[0].color.setHex(0xe6e6e6);
+    this.geometry.faces[1].color.setHex(0xe6e6e6);
+    this.geometry.faces[2].color.setHex(0xf2f2f2);
+    this.geometry.faces[3].color.setHex(0xf2f2f2);
+    this.geometry.faces[4].color.setHex(0xf2f2f2);
+    this.geometry.faces[5].color.setHex(0xf2f2f2);
 
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
         if (j === 3) {
           continue;
+        } else if (j === 4 && i === 7) {
+          box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
+          box.material.emissive.setHex(0x123d1e);
+          box.name = i + '-' + j;
+          box.position.z = i;
+          box.position.x = j;
+          box.callback = function () {
+            console.log(this.uuid);
+          };
+          seatGroup.children.push(box);
+          this.scene.add(box);
         } else {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors}));
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
-          // box.addEventListener('click', this.onDocumentMouseDown, false);
           box.callback = function() {
-            console.log(this.name);
+            console.log(this.uuid);
           };
           seatGroup.children.push(box);
           this.scene.add(box);
@@ -264,47 +274,39 @@ export class AndersMapComponent implements OnInit {
     if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
-
-    raycaster.setFromCamera(mouse, camera);
-    // calculate objects intersecting the picking ray
-    const intersects = raycaster.intersectObjects(seatGroup.children);
-    // count and look after all objects in the diamonds group
-    if (intersects.length > 0) {
-      if (INTERSECTED !== intersects[0].object) {
-        if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
-        INTERSECTED = intersects[0].object;
-        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        // setting up new material on hover
-        INTERSECTED.material.emissive.setHex(0xffffff);
-        intersects[0].object.callback();
-      }
-       } else {
-        if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-       }
-        INTERSECTED = null;
-    }
-
-
     renderer.render(this.scene, camera);
     requestAnimationFrame(this.render.bind(this));
     this.controls.update();
   }
 
 
-onDocumentMouseDown(event) {
-  console.log(box.name);
-  event.preventDefault();
-  // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  // mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(seatGroup.children);
-}
 
 onMouseMove(event) {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   // set up camera position
   // camera.lookAt(this.scene.position);
+  raycaster.setFromCamera(mouse, camera);
+  // calculate objects intersecting the picking ray
+  const intersects = raycaster.intersectObjects(seatGroup.children);
+  console.log(intersects);
+
+  // count and look after all objects in the diamonds group
+  if (intersects.length > 0) {
+    if (INTERSECTED !== intersects[0].object) {
+      if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
+      INTERSECTED = intersects[0].object;
+      INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+      // setting up new material on hover
+      INTERSECTED.material.emissive.setHex(0x123d1e);
+      intersects[0].object.callback();
+    }
+  } else {
+    if (INTERSECTED) {
+      INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+    }
+    INTERSECTED = null;
+  }
 }
 
 
