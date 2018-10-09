@@ -11,6 +11,7 @@ let camera;
 let renderer;
 let box;
 const scene = new THREE.Scene();
+let textGeometry;
 const priceArray = [];
 // const randomNumber = Math.floor(Math.random() * 101).toString();
 // let selectedSeat = '7-4';
@@ -27,6 +28,8 @@ export class AndersMapComponent implements OnInit {
   light: any;
   controls: any;
   loader: any;
+
+  outsideIndex: number = 0;
 
   text: any;
   // textGeometry: any;
@@ -194,7 +197,7 @@ export class AndersMapComponent implements OnInit {
     this.controls.maxDistance = 15;
     this.controls.minDistance = 10;
     this.controls.noPan = false;
-    this.controls.noRotate = true;
+    this.controls.noRotate = false;
     this.controls.noZoom = false;
 
     this.controls.staticMoving = false;
@@ -256,12 +259,13 @@ export class AndersMapComponent implements OnInit {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0xb2279b);
           box.name = `${i + 1}${this.seat}`;
+          box.uuid = this.outsideIndex;
           box.position.z = i;
           box.position.x = j;
           this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
 
-            const textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
+            textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
               font: font,
               size: 0.3,
               height: 0.1,
@@ -271,6 +275,8 @@ export class AndersMapComponent implements OnInit {
               bevelSize: 8,
               bevelSegments: 5
             });
+            console.log();
+            
             priceArray.push(textGeometry.parameters.text);
             console.log(priceArray);
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
@@ -280,22 +286,24 @@ export class AndersMapComponent implements OnInit {
             textMesh.rotation.y = Math.PI / 7;
             scene.add(textMesh);
           });
-          box.callback = function (name) {
-            console.log(this.textMesh);
+
+          box.callback = function (name, index) {
             selectedSeat[0].innerHTML = name;
-            seatPrice[0].innerHTML = 'wow';
+            seatPrice[0].innerHTML = priceArray[index];
           };
           seatGroup.children.push(box);
           scene.add(box);
+
+          this.outsideIndex++;
         } else {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors}));
           box.name = i + '-' + j;
           box.uuid = 'notSelected';
           box.position.z = i;
           box.position.x = j;
-          box.callback = function(name) {
+          box.callback = function(name, index) {
             selectedSeat[0].innerHTML = name;
-            seatPrice[0].innerHTML = 'wow';
+            seatPrice[0].innerHTML = priceArray[index];
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -334,8 +342,8 @@ export class AndersMapComponent implements OnInit {
         if (INTERSECTED.currentHex === 0 || INTERSECTED.currentHex === 727395) { return; }
         INTERSECTED.material.emissive.setHex(0x123d1e);
         // this.selectedSeat = INTERSECTED.name;
-        console.log(intersects[0].object.geometry);
-        intersects[0].object.callback(INTERSECTED.name);
+        console.log(intersects[0].object.uuid);
+        intersects[0].object.callback(INTERSECTED.name, intersects[0].object.uuid);
       }
     } else {
       if (INTERSECTED) {
