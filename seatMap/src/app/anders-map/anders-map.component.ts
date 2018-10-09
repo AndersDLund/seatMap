@@ -11,6 +11,8 @@ let camera;
 let renderer;
 let box;
 const scene = new THREE.Scene();
+const priceArray = [];
+// const randomNumber = Math.floor(Math.random() * 101).toString();
 // let selectedSeat = '7-4';
 // let textGeometry;
 
@@ -35,6 +37,7 @@ export class AndersMapComponent implements OnInit {
   objects: Array<any>;
 
   selectedSeat: any;
+  seatPrice: any;
 
   dxPerFrame: number = .01;
 
@@ -78,6 +81,7 @@ export class AndersMapComponent implements OnInit {
   }
   ngOnInit() {
     this.selectedSeat = '7-4';
+    this.seatPrice = '';
 
     scene.background = new THREE.Color('lightblue');
     this.mouse = new THREE.Vector2();
@@ -218,27 +222,7 @@ export class AndersMapComponent implements OnInit {
     this.sun.position.z = -7;
     scene.add(this.sun);
 
-    // this.loader = new THREE.FontLoader();
-    // this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-    //   const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-
-    //   const textGeometry = new THREE.TextGeometry(selectedSeat, {
-    //     font: font,
-    //     size: 20,
-    //     height: 12,
-    //     curveSegments: 12,
-    //     // bevelEnabled: true,
-    //     bevelThickness: 10,
-    //     bevelSize: 8,
-    //     bevelSegments: 5
-    //   });
-    //   const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    //   textMesh.position.x = -70;
-    //   textMesh.position.y = -10;
-    //   textMesh.position.z = -100;
-    //   textMesh.rotation.y = Math.PI / 7;
-    //   scene.add(textMesh);
-    // });
+    this.loader = new THREE.FontLoader();
 
     this.seatMaterials = [
       new THREE.MeshLambertMaterial({ color: 0xff0000}),
@@ -258,7 +242,8 @@ export class AndersMapComponent implements OnInit {
     this.geometry.faces[4].color.setHex(0xf2f2f2);
     this.geometry.faces[5].color.setHex(0xf2f2f2);
 
-    const col = document.getElementsByClassName('col-12');
+    const selectedSeat = document.getElementsByClassName('selectedSeat');
+    const seatPrice = document.getElementsByClassName('seatPrice');
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
         if (j === 3) {
@@ -279,8 +264,32 @@ export class AndersMapComponent implements OnInit {
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
+          this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+
+            const textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
+              font: font,
+              size: 0.3,
+              height: 0.1,
+              curveSegments: 12,
+              // bevelEnabled: true,
+              bevelThickness: 10,
+              bevelSize: 8,
+              bevelSegments: 5
+            });
+            priceArray.push(textGeometry.parameters.text);
+            console.log(priceArray);
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.x = j - .6;
+            textMesh.position.y = 1;
+            textMesh.position.z = i;
+            textMesh.rotation.y = Math.PI / 7;
+            scene.add(textMesh);
+          });
           box.callback = function (name) {
-            col[0].innerHTML = name;
+            console.log(this.textMesh);
+            selectedSeat[0].innerHTML = name;
+            seatPrice[0].innerHTML = 'wow';
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -291,7 +300,8 @@ export class AndersMapComponent implements OnInit {
           box.position.z = i;
           box.position.x = j;
           box.callback = function(name) {
-            col[0].innerHTML = name;
+            selectedSeat[0].innerHTML = name;
+            seatPrice[0].innerHTML = 'wow';
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -330,6 +340,8 @@ export class AndersMapComponent implements OnInit {
         if (INTERSECTED.currentHex === 0) { return; }
         INTERSECTED.material.emissive.setHex(0x123d1e);
         // this.selectedSeat = INTERSECTED.name;
+        console.log(intersects[0].object.geometry);
+        
         intersects[0].object.callback(INTERSECTED.name);
       }
     } else {
