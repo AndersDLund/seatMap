@@ -76,12 +76,14 @@ export class AndersMapComponent implements OnInit {
   intersects: any;
   intersected: any;
   currentHex: String;
+  seat: String;
 
   constructor() {
   }
   ngOnInit() {
-    this.selectedSeat = '7-4';
+    // this.selectedSeat = '7-4';
     this.seatPrice = '';
+    this.selectedSeat = '8C';
 
     scene.background = new THREE.Color('lightblue');
     this.mouse = new THREE.Vector2();
@@ -118,17 +120,6 @@ export class AndersMapComponent implements OnInit {
 
     this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
     this.engineMaterial = new THREE.MeshNormalMaterial();
-
-    // this.planeFrontGeometry = new THREE.Geometry(100, 100, 100);
-    // this.fv1 = new THREE.Vector3(5, 0, 0);
-    // this.fv2 = new THREE.Vector3(-7, 0, 0);
-    // this.fv3 = new THREE.Vector3(0, 7, 0);
-
-    // this.planeFrontGeometry.vertices.push(this.fv1);
-    // this.planeFrontGeometry.vertices.push(this.fv2);
-    // this.planeFrontGeometry.vertices.push(this.fv3);
-
-    // this.planeFrontGeometry.faces.push(new THREE.Face3(0, 2, 1));
 
     this.planeFrontGeometry = new THREE.CircleGeometry(4, 50, 0, Math.PI * 2);
 
@@ -214,7 +205,6 @@ export class AndersMapComponent implements OnInit {
     window.addEventListener('change', this.render);
     window.addEventListener('resize', this.onWindowResize, false);
     document.addEventListener('mousemove', this.onMouseMove, false);
-    window.addEventListener('click', this.setSeat, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -246,11 +236,15 @@ export class AndersMapComponent implements OnInit {
     const seatPrice = document.getElementsByClassName('seatPrice');
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
+        if (j === 1) {this.seat = 'A'; }
+        if (j === 2) { this.seat = 'B'; }
+        if (j === 4) { this.seat = 'C'; }
+        if (j === 5) { this.seat = 'D'; }
         if (j === 3) {
           continue;
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
-          box.material.emissive.setHex(0x123d1e);
+          box.material.emissive.setHex(0x0b1963);
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
@@ -261,7 +255,7 @@ export class AndersMapComponent implements OnInit {
         } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0xb2279b);
-          box.name = i + '-' + j;
+          box.name = `${i + 1}${this.seat}`;
           box.position.z = i;
           box.position.x = j;
           this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
@@ -337,11 +331,10 @@ export class AndersMapComponent implements OnInit {
         }
         INTERSECTED = intersects[0].object;
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        if (INTERSECTED.currentHex === 0) { return; }
+        if (INTERSECTED.currentHex === 0 || INTERSECTED.currentHex === 727395) { return; }
         INTERSECTED.material.emissive.setHex(0x123d1e);
         // this.selectedSeat = INTERSECTED.name;
         console.log(intersects[0].object.geometry);
-        
         intersects[0].object.callback(INTERSECTED.name);
       }
     } else {
@@ -353,10 +346,6 @@ export class AndersMapComponent implements OnInit {
   }
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
-
-setSeat() {
-
-}
 
   onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
