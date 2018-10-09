@@ -71,6 +71,8 @@ export class AndersMapComponent implements OnInit {
 
   mouse: any;
   intersects: any;
+  intersected: any;
+  currentHex: String;
 
   constructor() {
   }
@@ -113,16 +115,18 @@ export class AndersMapComponent implements OnInit {
     this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
     this.engineMaterial = new THREE.MeshNormalMaterial();
 
-    this.planeFrontGeometry = new THREE.Geometry(100, 100, 100);
-    this.fv1 = new THREE.Vector3(5, 0, 0);
-    this.fv2 = new THREE.Vector3(-7, 0, 0);
-    this.fv3 = new THREE.Vector3(0, 7, 0);
+    // this.planeFrontGeometry = new THREE.Geometry(100, 100, 100);
+    // this.fv1 = new THREE.Vector3(5, 0, 0);
+    // this.fv2 = new THREE.Vector3(-7, 0, 0);
+    // this.fv3 = new THREE.Vector3(0, 7, 0);
 
-    this.planeFrontGeometry.vertices.push(this.fv1);
-    this.planeFrontGeometry.vertices.push(this.fv2);
-    this.planeFrontGeometry.vertices.push(this.fv3);
+    // this.planeFrontGeometry.vertices.push(this.fv1);
+    // this.planeFrontGeometry.vertices.push(this.fv2);
+    // this.planeFrontGeometry.vertices.push(this.fv3);
 
-    this.planeFrontGeometry.faces.push(new THREE.Face3(0, 2, 1));
+    // this.planeFrontGeometry.faces.push(new THREE.Face3(0, 2, 1));
+
+    this.planeFrontGeometry = new THREE.CircleGeometry(4, 50, 0, Math.PI * 2);
 
     this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
     this.planeWingMaterial = new THREE.MeshNormalMaterial();
@@ -136,19 +140,21 @@ export class AndersMapComponent implements OnInit {
 
     this.planeWingGeometry.faces.push(new THREE.Face3(0, 2, 1));
 
-    this.planeWing = new THREE.Mesh(this.planeWingGeometry, this.planeWingMaterial);
+    this.planeWing = new THREE.Mesh(this.planeWingGeometry, new THREE.MeshLambertMaterial({ color: 'gray' }));
     this.planeWing.position.x = 2.7;
     this.planeWing.position.y = -1;
     this.planeWing.position.z = 1;
     this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
     scene.add(this.planeWing);
 
-    this.planeFront = new THREE.Mesh(this.planeFrontGeometry, this.planeWingMaterial);
+
+
+    this.planeFront = new THREE.Mesh(this.planeFrontGeometry, new THREE.MeshLambertMaterial({color: 'gray'}));
     this.planeFront.position.x = 2.7;
     this.planeFront.position.y = -1;
     this.planeFront.position.z = -1;
     this.planeFront.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI * 2);
-    //  this.planeFront.rotation.z = 90;
+    this.planeFront.rotation.z = 90;
     scene.add(this.planeFront);
 
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
@@ -204,6 +210,7 @@ export class AndersMapComponent implements OnInit {
     window.addEventListener('change', this.render);
     window.addEventListener('resize', this.onWindowResize, false);
     document.addEventListener('mousemove', this.onMouseMove, false);
+    window.addEventListener('click', this.setSeat, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -259,15 +266,20 @@ export class AndersMapComponent implements OnInit {
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x123d1e);
-          box.uuid = 'selected';
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
-          box.callback = function (name) {
-            // this.material.emissive.setHex(0xf2f2f2);
-            this.selectedSeat = name;
-            col[0].innerHTML = this.selectedSeat;
-            console.log(this.geometry);
+          box.callback = function () {
+          };
+          seatGroup.children.push(box);
+          scene.add(box);
+        } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
+          box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
+          box.material.emissive.setHex(0xb2279b);
+          box.name = i + '-' + j;
+          box.position.z = i;
+          box.position.x = j;
+          box.callback = function () {
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -311,8 +323,16 @@ onMouseMove(event) {
   raycaster.setFromCamera(mouse, camera);
   // calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects(seatGroup.children);
+  // if (intersects.length > 0) {
+  //   this.intersected = intersects[0].object;
+  //   this.currentHex = this.intersected.material.emissive.getHexString();
+  //   if (this.currentHex === '000000') {
+  //     return;
+  //   }
+  //   this.intersected.material.emissive.setHex(this.currentHex);
+  //   this.intersected.material.emissive.setHex(0x123d1e);
+  // }
 
-  // count and look after all objects in the diamonds group
   if (intersects.length > 0) {
     if (INTERSECTED !== intersects[0].object) {
       if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
@@ -329,14 +349,37 @@ onMouseMove(event) {
   } else {
     if (INTERSECTED) {
       INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+      INTERSECTED = null;
     }
-    INTERSECTED = null;
   }
+  // count and look after all objects in the diamonds group
+  // if (intersects.length > 0) {
+  //   if (INTERSECTED !== intersects[0].object) {
+  //     if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
+  //     INTERSECTED = intersects[0].object;
+  //     INTERSECTED.currentHex = INTERSECTED.material.emissive.getHexString();
+  //     if (INTERSECTED.currentHex === '000000') {
+  //       return;
+  //     }
+  //     // setting up new material on hover
+  //     console.log(INTERSECTED.currentHex);
+  //     INTERSECTED.material.emissive.setHex(0x123d1e);
+
+  //     // intersects[0].object.callback();
+  //   }
+  // } else {
+  //   if (INTERSECTED) {
+  //     INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+  //   }
+  //   INTERSECTED = null;
+  // }
 }
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
+setSeat() {
 
+}
 
   onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
