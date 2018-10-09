@@ -160,15 +160,15 @@ export class AndersMapComponent implements OnInit {
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud1.position.x = -4.5;
     this.cloud1.position.y = 6.2;
-    // this.cloud1.position.z = 12;
+    this.cloud1.position.z = -20;
     this.cloud2 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud2.position.x = -5.2;
     this.cloud2.position.y = 5;
-    // this.cloud2.position.z = 12;
+    this.cloud2.position.z = -20;
     this.cloud3 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud3.position.x = -3.8;
     this.cloud3.position.y = 5;
-    // this.cloud3.position.z = 12;
+    this.cloud3.position.z = -20;
     scene.add(this.cloud1, this.cloud2, this.cloud3);
 
 
@@ -305,7 +305,7 @@ export class AndersMapComponent implements OnInit {
     this.cloud1.position.z += this.dxPerFrame;
     this.cloud2.position.z += this.dxPerFrame;
     this.cloud3.position.z += this.dxPerFrame;
-    if (this.cloud1.position.z > 40 || this.cloud2.position.z > 40 || this.cloud3.position.z > 40) { this.dxPerFrame = -.01; }
+    this.dxPerFrame = .01;
     // if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
