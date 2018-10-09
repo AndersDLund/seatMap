@@ -44,6 +44,15 @@ export class AndersMapComponent implements OnInit {
 
   dxPerFrame: number = .01;
 
+  planeBody: any;
+  planeBodyGeometry: any;
+
+  planeBelly: any;
+  planeBellyGeometry: any;
+
+  runway: any;
+  runwayGeometry: any;
+
   planeFront: any;
   planeFrontGeometry: any;
   fv1: any;
@@ -122,9 +131,15 @@ export class AndersMapComponent implements OnInit {
     this.cloudMaterial = new THREE.MeshNormalMaterial();
 
     this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
-    this.engineMaterial = new THREE.MeshNormalMaterial();
+    this.engineMaterial = new THREE.MeshLambertMaterial({ color: 'gray' });
 
-    this.planeFrontGeometry = new THREE.CircleGeometry(4, 50, 0, Math.PI * 2);
+    this.planeFrontGeometry = new THREE.ConeGeometry(3, 10, 30, Math.PI * 2, false);
+
+    this.planeBodyGeometry = new THREE.PlaneGeometry(5, 20, 32);
+
+    this.planeBellyGeometry = new THREE.CylinderGeometry(1.85, 2.25, 10, 32, 32);
+
+    this.runwayGeometry = new THREE.PlaneGeometry(1, 20, 32);
 
     this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
     this.planeWingMaterial = new THREE.MeshNormalMaterial();
@@ -138,9 +153,33 @@ export class AndersMapComponent implements OnInit {
 
     this.planeWingGeometry.faces.push(new THREE.Face3(0, 2, 1));
 
+    this.planeBody = new THREE.Mesh(this.planeBodyGeometry, new THREE.MeshLambertMaterial({color: 'gray'}));
+    this.planeBody.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    this.planeBody.position.x = 3;
+    this.planeBody.position.y = -.4;
+    this.planeBody.position.z = 10;
+    scene.add(this.planeBody);
+
+    this.runway = new THREE.Mesh(this.runwayGeometry, new THREE.MeshLambertMaterial({color: 'coral'}));
+    this.runway.position.x = 3;
+    this.runway.position.y = -.35;
+    this.runway.position.z = 10;
+    this.runway.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    scene.add(this.runway);
+
+
+    this.planeBelly = new THREE.Mesh(this.planeBellyGeometry, new THREE.MeshLambertMaterial({color: 'gray'}));
+    this.planeBelly.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+    this.planeBelly.position.x = 3;
+    this.planeBelly.position.y = -3;
+    this.planeBelly.position.z = 7;
+    this.planeBelly.rotation.y = 180;
+    scene.add(this.planeBelly);
+
+
     this.planeWing = new THREE.Mesh(this.planeWingGeometry, new THREE.MeshLambertMaterial({ color: 'gray' }));
-    this.planeWing.position.x = 2.7;
-    this.planeWing.position.y = -1;
+    this.planeWing.position.x = 3;
+    this.planeWing.position.y = -.4;
     this.planeWing.position.z = 1;
     this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
     scene.add(this.planeWing);
@@ -148,11 +187,12 @@ export class AndersMapComponent implements OnInit {
 
 
     this.planeFront = new THREE.Mesh(this.planeFrontGeometry, new THREE.MeshLambertMaterial({color: 'gray'}));
-    this.planeFront.position.x = 2.7;
-    this.planeFront.position.y = -1;
-    this.planeFront.position.z = -1;
+    this.planeFront.thetaLength = Math.PI;
+    this.planeFront.position.x = 3;
+    this.planeFront.position.y = -2;
+    this.planeFront.position.z = -5.5;
     this.planeFront.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI * 2);
-    this.planeFront.rotation.z = 90;
+    this.planeFront.rotation.y = 45;
     scene.add(this.planeFront);
 
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
@@ -172,16 +212,16 @@ export class AndersMapComponent implements OnInit {
 
     this.engine = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
     this.engine.position.x = -4;
-    this.engine.position.y = -2;
+    this.engine.position.y = -.6;
     this.engine.position.z = 3;
     this.engine.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
     scene.add(this.engine);
 
     this.engine1 = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
     this.engine1.position.x = 8;
-    this.engine1.position.y = -2.7;
-    this.engine1.position.z = 1.5;
-    this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI - .15);
+    this.engine1.position.y = -.6;
+    this.engine1.position.z = 3;
+    this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI);
     scene.add(this.engine1);
 
     this.light = new THREE.AmbientLight(0x404040, 3);
@@ -316,7 +356,6 @@ export class AndersMapComponent implements OnInit {
     this.cloud2.position.z += this.dxPerFrame;
     this.cloud3.position.z += this.dxPerFrame;
     this.dxPerFrame = .01;
-    // if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
     renderer.render(scene, camera);
@@ -331,10 +370,9 @@ export class AndersMapComponent implements OnInit {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
     const currentHex = intersects[0].object.material.emissive.getHex();
-    console.log(currentHex);
     if (currentHex !== 727395 && currentHex !== 11675547) {
-      this.seat = '8C';
-      this.seatPrice = '';
+      // this.seat = '8C';
+      // this.seatPrice = '';
       return;
     }
     if (intersects.length > 0) {
