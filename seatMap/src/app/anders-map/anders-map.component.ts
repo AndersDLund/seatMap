@@ -279,7 +279,8 @@ export class AndersMapComponent implements OnInit {
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
-          box.callback = function () {
+          box.callback = function (name) {
+            col[0].innerHTML = name;
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -290,8 +291,7 @@ export class AndersMapComponent implements OnInit {
           box.position.z = i;
           box.position.x = j;
           box.callback = function(name) {
-            this.selectedSeat = name;
-            col[0].innerHTML = this.selectedSeat;
+            col[0].innerHTML = name;
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -315,65 +315,30 @@ export class AndersMapComponent implements OnInit {
   }
 
 
-onMouseMove(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  // set up camera position
-  // camera.lookAt(this.scene.position);
-  raycaster.setFromCamera(mouse, camera);
-  // calculate objects intersecting the picking ray
-  const intersects = raycaster.intersectObjects(seatGroup.children);
-  // if (intersects.length > 0) {
-  //   this.intersected = intersects[0].object;
-  //   this.currentHex = this.intersected.material.emissive.getHexString();
-  //   if (this.currentHex === '000000') {
-  //     return;
-  //   }
-  //   this.intersected.material.emissive.setHex(this.currentHex);
-  //   this.intersected.material.emissive.setHex(0x123d1e);
-  // }
-
-  if (intersects.length > 0) {
-    if (INTERSECTED !== intersects[0].object) {
-      if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
-      INTERSECTED = intersects[0].object;
-      INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-      // setting up new material on hover
-      INTERSECTED.material.emissive.setHex(0x123d1e);
-      // console.log(Object.keys(intersects[0]).contains('7-4'));
-      // console.log(intersects.includes(intersects[0].object.name));
-      intersects[0].object.callback(INTERSECTED.name);
-      this.selectedSeat = INTERSECTED.name;
-      console.log(this.selectedSeat);
-    }
-  } else {
-    if (INTERSECTED) {
-      INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-      INTERSECTED = null;
+  onMouseMove(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(seatGroup.children);
+    if (intersects.length > 0) {
+      if (intersects[0].object !== INTERSECTED) {
+        if (INTERSECTED) {
+          INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+        }
+        INTERSECTED = intersects[0].object;
+        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+        if (INTERSECTED.currentHex === 0) { return; }
+        INTERSECTED.material.emissive.setHex(0x123d1e);
+        // this.selectedSeat = INTERSECTED.name;
+        intersects[0].object.callback(INTERSECTED.name);
+      }
+    } else {
+      if (INTERSECTED) {
+        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+        INTERSECTED = null;
+      }
     }
   }
-  // count and look after all objects in the diamonds group
-  // if (intersects.length > 0) {
-  //   if (INTERSECTED !== intersects[0].object) {
-  //     if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
-  //     INTERSECTED = intersects[0].object;
-  //     INTERSECTED.currentHex = INTERSECTED.material.emissive.getHexString();
-  //     if (INTERSECTED.currentHex === '000000') {
-  //       return;
-  //     }
-  //     // setting up new material on hover
-  //     console.log(INTERSECTED.currentHex);
-  //     INTERSECTED.material.emissive.setHex(0x123d1e);
-
-  //     // intersects[0].object.callback();
-  //   }
-  // } else {
-  //   if (INTERSECTED) {
-  //     INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-  //   }
-  //   INTERSECTED = null;
-  // }
-}
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
