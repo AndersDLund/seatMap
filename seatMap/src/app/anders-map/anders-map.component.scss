@@ -1,0 +1,12 @@
+.container {
+    position: absolute;
+    width: 100%;
+    .row {
+        display: flex;
+        justify-content: flex-end;
+
+        .col-12 {
+            font-size: 100px;
+        }
+    }
+}

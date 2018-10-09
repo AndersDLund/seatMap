@@ -10,6 +10,9 @@ let seatGroup;
 let camera;
 let renderer;
 let box;
+const scene = new THREE.Scene();
+// let selectedSeat = '7-4';
+// let textGeometry;
 
 @Component({
   selector: 'app-anders-map',
@@ -17,19 +20,21 @@ let box;
   styleUrls: ['./anders-map.component.scss']
 })
 export class AndersMapComponent implements OnInit {
-  scene: any = new THREE.Scene();
+  // scene: any = new THREE.Scene();
   otherCamera: any;
   light: any;
   controls: any;
   loader: any;
 
   text: any;
-  textGeometry: any;
-  textMaterial: any;
+  // textGeometry: any;
+  // textMaterial: any;
   // box: any;
   seatMaterials: Array<any>;
   sun: any;
   objects: Array<any>;
+
+  selectedSeat: any;
 
   dxPerFrame: number = .01;
 
@@ -70,7 +75,9 @@ export class AndersMapComponent implements OnInit {
   constructor() {
   }
   ngOnInit() {
-    this.scene.background = new THREE.Color('lightblue');
+    this.selectedSeat = '7-4';
+
+    scene.background = new THREE.Color('lightblue');
     this.mouse = new THREE.Vector2();
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -80,19 +87,6 @@ export class AndersMapComponent implements OnInit {
     camera.position.y = 5;
     camera.position.x = 7;
 
-    this.loader = new THREE.FontLoader();
-    this.loader.load('/examples/fonts/helvetiker_regular.typeface.json', function( font ) {
-      this.textGeometry = new THREE.TextGeometry(box.name, {
-        font: font,
-        size: 80,
-        height: 5,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 10,
-        bevelSize: 8,
-        bevelSegments: 5
-      });
-    });
 
     raycaster = new THREE.Raycaster();
 
@@ -100,11 +94,11 @@ export class AndersMapComponent implements OnInit {
     this.otherCamera.position.z = 100;
     this.otherCamera.position.y = 5;
     this.otherCamera.position.x = 7;
-    this.scene.add(camera);
-    this.scene.add(this.otherCamera);
+    scene.add(camera);
+    scene.add(this.otherCamera);
 
     setTimeout(() => {
-      this.scene.activeCamera = this.otherCamera;
+      scene.activeCamera = this.otherCamera;
     }, 5000);
 
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
@@ -147,7 +141,7 @@ export class AndersMapComponent implements OnInit {
     this.planeWing.position.y = -1;
     this.planeWing.position.z = 1;
     this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
-    this.scene.add(this.planeWing);
+    scene.add(this.planeWing);
 
     this.planeFront = new THREE.Mesh(this.planeFrontGeometry, this.planeWingMaterial);
     this.planeFront.position.x = 2.7;
@@ -155,7 +149,7 @@ export class AndersMapComponent implements OnInit {
     this.planeFront.position.z = -1;
     this.planeFront.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI * 2);
     //  this.planeFront.rotation.z = 90;
-    this.scene.add(this.planeFront);
+    scene.add(this.planeFront);
 
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud1.position.x = -4.5;
@@ -169,7 +163,7 @@ export class AndersMapComponent implements OnInit {
     this.cloud3.position.x = -3.8;
     this.cloud3.position.y = 5;
     // this.cloud3.position.z = 12;
-    this.scene.add(this.cloud1, this.cloud2, this.cloud3);
+    scene.add(this.cloud1, this.cloud2, this.cloud3);
 
 
     this.engine = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
@@ -177,17 +171,17 @@ export class AndersMapComponent implements OnInit {
     this.engine.position.y = -2;
     this.engine.position.z = 3;
     this.engine.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
-    this.scene.add(this.engine);
+    scene.add(this.engine);
 
     this.engine1 = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
     this.engine1.position.x = 8;
     this.engine1.position.y = -2.7;
     this.engine1.position.z = 1.5;
     this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI - .15);
-    this.scene.add(this.engine1);
+    scene.add(this.engine1);
 
     this.light = new THREE.AmbientLight(0x404040, 3);
-    this.scene.add(this.light);
+    scene.add(this.light);
 
 
     this.controls = new TrackballControls(camera, renderer.domElement);
@@ -215,7 +209,29 @@ export class AndersMapComponent implements OnInit {
     this.sun.position.x = -20;
     this.sun.position.y = 11;
     this.sun.position.z = -7;
-    this.scene.add(this.sun);
+    scene.add(this.sun);
+
+    // this.loader = new THREE.FontLoader();
+    // this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+    //   const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+
+    //   const textGeometry = new THREE.TextGeometry(selectedSeat, {
+    //     font: font,
+    //     size: 20,
+    //     height: 12,
+    //     curveSegments: 12,
+    //     // bevelEnabled: true,
+    //     bevelThickness: 10,
+    //     bevelSize: 8,
+    //     bevelSegments: 5
+    //   });
+    //   const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    //   textMesh.position.x = -70;
+    //   textMesh.position.y = -10;
+    //   textMesh.position.z = -100;
+    //   textMesh.rotation.y = Math.PI / 7;
+    //   scene.add(textMesh);
+    // });
 
     this.seatMaterials = [
       new THREE.MeshLambertMaterial({ color: 0xff0000}),
@@ -235,6 +251,7 @@ export class AndersMapComponent implements OnInit {
     this.geometry.faces[4].color.setHex(0xf2f2f2);
     this.geometry.faces[5].color.setHex(0xf2f2f2);
 
+    const col = document.getElementsByClassName('col-12');
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
         if (j === 3) {
@@ -242,24 +259,30 @@ export class AndersMapComponent implements OnInit {
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x123d1e);
+          box.uuid = 'selected';
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
-          box.callback = function () {
-            console.log(this.uuid);
+          box.callback = function (name) {
+            // this.material.emissive.setHex(0xf2f2f2);
+            this.selectedSeat = name;
+            col[0].innerHTML = this.selectedSeat;
+            console.log(this.geometry);
           };
           seatGroup.children.push(box);
-          this.scene.add(box);
+          scene.add(box);
         } else {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors}));
           box.name = i + '-' + j;
+          box.uuid = 'notSelected';
           box.position.z = i;
           box.position.x = j;
-          box.callback = function() {
-            console.log(this.uuid);
+          box.callback = function(name) {
+            this.selectedSeat = name;
+            col[0].innerHTML = this.selectedSeat;
           };
           seatGroup.children.push(box);
-          this.scene.add(box);
+          scene.add(box);
         }
       }
     }
@@ -267,18 +290,17 @@ export class AndersMapComponent implements OnInit {
   }
 
   render() {
-    this.cloud1.position.x += this.dxPerFrame;
-    this.cloud2.position.x += this.dxPerFrame;
-    this.cloud3.position.x += this.dxPerFrame;
-    if (this.cloud1.position.x > 40 || this.cloud2.position.x > 40 || this.cloud3.position.x > 40) { this.dxPerFrame = -.01; }
-    if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
+    this.cloud1.position.z += this.dxPerFrame;
+    this.cloud2.position.z += this.dxPerFrame;
+    this.cloud3.position.z += this.dxPerFrame;
+    if (this.cloud1.position.z > 40 || this.cloud2.position.z > 40 || this.cloud3.position.z > 40) { this.dxPerFrame = -.01; }
+    // if (this.cloud1.position.x < -40 || this.cloud2.position.x < -40 || this.cloud3.position.x < -40) { this.dxPerFrame = .01; }
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
-    renderer.render(this.scene, camera);
+    renderer.render(scene, camera);
     requestAnimationFrame(this.render.bind(this));
     this.controls.update();
   }
-
 
 
 onMouseMove(event) {
@@ -289,7 +311,6 @@ onMouseMove(event) {
   raycaster.setFromCamera(mouse, camera);
   // calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects(seatGroup.children);
-  console.log(intersects);
 
   // count and look after all objects in the diamonds group
   if (intersects.length > 0) {
@@ -299,7 +320,11 @@ onMouseMove(event) {
       INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
       // setting up new material on hover
       INTERSECTED.material.emissive.setHex(0x123d1e);
-      intersects[0].object.callback();
+      // console.log(Object.keys(intersects[0]).contains('7-4'));
+      // console.log(intersects.includes(intersects[0].object.name));
+      intersects[0].object.callback(INTERSECTED.name);
+      this.selectedSeat = INTERSECTED.name;
+      console.log(this.selectedSeat);
     }
   } else {
     if (INTERSECTED) {
@@ -308,7 +333,6 @@ onMouseMove(event) {
     INTERSECTED = null;
   }
 }
-
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
