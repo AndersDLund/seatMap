@@ -61,6 +61,8 @@ export class AndersMapComponent implements OnInit {
 
   mouse: any;
   intersects: any;
+  intersected: any;
+  currentHex: String;
 
   constructor() {
   }
@@ -139,7 +141,7 @@ export class AndersMapComponent implements OnInit {
     this.planeFront.position.y = -1;
     this.planeFront.position.z = -1;
     this.planeFront.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI * 2);
-     this.planeFront.rotation.z = 90;
+    this.planeFront.rotation.z = 90;
     this.scene.add(this.planeFront);
 
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
@@ -232,7 +234,16 @@ export class AndersMapComponent implements OnInit {
           box.position.z = i;
           box.position.x = j;
           box.callback = function () {
-
+          };
+          seatGroup.children.push(box);
+          this.scene.add(box);
+        } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
+          box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
+          box.material.emissive.setHex(0xb2279b);
+          box.name = i + '-' + j;
+          box.position.z = i;
+          box.position.x = j;
+          box.callback = function () {
           };
           seatGroup.children.push(box);
           this.scene.add(box);
@@ -275,24 +286,54 @@ onMouseMove(event) {
   raycaster.setFromCamera(mouse, camera);
   // calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects(seatGroup.children);
+  // if (intersects.length > 0) {
+  //   this.intersected = intersects[0].object;
+  //   this.currentHex = this.intersected.material.emissive.getHexString();
+  //   if (this.currentHex === '000000') {
+  //     return;
+  //   }
+  //   this.intersected.material.emissive.setHex(this.currentHex);
+  //   this.intersected.material.emissive.setHex(0x123d1e);
+  // }
 
-  // count and look after all objects in the diamonds group
   if (intersects.length > 0) {
-    if (INTERSECTED !== intersects[0].object) {
-      if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
-      INTERSECTED = intersects[0].object;
-      INTERSECTED.currentHex = INTERSECTED.material.emissive.getHexString();
-      // setting up new material on hover
-      INTERSECTED.material.emissive.setHex(0x123d1e);
-
-      // intersects[0].object.callback();
+    if (intersects[0].object !== INTERSECTED) {
+      if (INTERSECTED) {
+        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
+        INTERSECTED = intersects[0].object;
+        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+        console.log(INTERSECTED.currentHex);
+        if (INTERSECTED.currentHex === 0) {return; }
+        INTERSECTED.material.emissive.setHex(0x123d1e);
+      // }
     }
   } else {
     if (INTERSECTED) {
       INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+      INTERSECTED = null;
     }
-    INTERSECTED = null;
   }
+  // count and look after all objects in the diamonds group
+  // if (intersects.length > 0) {
+  //   if (INTERSECTED !== intersects[0].object) {
+  //     if (INTERSECTED) { INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex); }
+  //     INTERSECTED = intersects[0].object;
+  //     INTERSECTED.currentHex = INTERSECTED.material.emissive.getHexString();
+  //     if (INTERSECTED.currentHex === '000000') {
+  //       return;
+  //     }
+  //     // setting up new material on hover
+  //     console.log(INTERSECTED.currentHex);
+  //     INTERSECTED.material.emissive.setHex(0x123d1e);
+
+  //     // intersects[0].object.callback();
+  //   }
+  // } else {
+  //   if (INTERSECTED) {
+  //     INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+  //   }
+  //   INTERSECTED = null;
+  // }
 }
 
 
