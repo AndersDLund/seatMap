@@ -210,7 +210,6 @@ export class AndersMapComponent implements OnInit {
     window.addEventListener('change', this.render);
     window.addEventListener('resize', this.onWindowResize, false);
     document.addEventListener('mousemove', this.onMouseMove, false);
-    window.addEventListener('click', this.setSeat, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -265,7 +264,7 @@ export class AndersMapComponent implements OnInit {
           continue;
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
-          box.material.emissive.setHex(0x123d1e);
+          box.material.emissive.setHex(0x0b1963);
           box.name = i + '-' + j;
           box.position.z = i;
           box.position.x = j;
@@ -327,9 +326,8 @@ export class AndersMapComponent implements OnInit {
         }
         INTERSECTED = intersects[0].object;
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        if (INTERSECTED.currentHex === 0) { return; }
+        if (INTERSECTED.currentHex === 0 || INTERSECTED.currentHex === 727395) { return; }
         INTERSECTED.material.emissive.setHex(0x123d1e);
-        // this.selectedSeat = INTERSECTED.name;
         intersects[0].object.callback(INTERSECTED.name);
       }
     } else {
@@ -341,10 +339,6 @@ export class AndersMapComponent implements OnInit {
   }
 
   de2ra = function (degree) { return degree * (Math.PI / 180); };
-
-setSeat() {
-
-}
 
   onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
