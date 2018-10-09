@@ -207,7 +207,7 @@ export class AndersMapComponent implements OnInit {
 
     window.addEventListener('change', this.render);
     window.addEventListener('resize', this.onWindowResize, false);
-    document.addEventListener('mousemove', this.onMouseMove, false);
+    document.addEventListener('click', this.onMouseMove, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
     this.sun.position.x = -20;
@@ -248,10 +248,12 @@ export class AndersMapComponent implements OnInit {
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x0b1963);
-          box.name = i + '-' + j;
+          box.name = `${i + 1}${this.seat}`;
           box.position.z = i;
           box.position.x = j;
-          box.callback = function () {
+          box.callback = function (name) {
+            selectedSeat[0].innerHTML = name;
+            seatPrice[0].innerHTML = '';
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -275,10 +277,8 @@ export class AndersMapComponent implements OnInit {
               bevelSize: 8,
               bevelSegments: 5
             });
-            console.log();
-            
+
             priceArray.push(textGeometry.parameters.text);
-            console.log(priceArray);
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textMesh.position.x = j - .6;
             textMesh.position.y = 1;
@@ -302,8 +302,6 @@ export class AndersMapComponent implements OnInit {
           box.position.z = i;
           box.position.x = j;
           box.callback = function(name, index) {
-            selectedSeat[0].innerHTML = name;
-            seatPrice[0].innerHTML = priceArray[index];
           };
           seatGroup.children.push(box);
           scene.add(box);
@@ -331,7 +329,14 @@ export class AndersMapComponent implements OnInit {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(seatGroup.children);
+    const intersects = raycaster.intersectObjects(scene.children);
+    const currentHex = intersects[0].object.material.emissive.getHex();
+    console.log(currentHex);
+    if (currentHex !== 727395 && currentHex !== 11675547) {
+      this.seat = '8C';
+      this.seatPrice = '';
+      return;
+    }
     if (intersects.length > 0) {
       if (intersects[0].object !== INTERSECTED) {
         if (INTERSECTED) {
@@ -339,10 +344,10 @@ export class AndersMapComponent implements OnInit {
         }
         INTERSECTED = intersects[0].object;
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        if (INTERSECTED.currentHex === 0 || INTERSECTED.currentHex === 727395) { return; }
+        if (currentHex === 727395) {
+          intersects[0].object.callback(INTERSECTED.name);
+          return; }
         INTERSECTED.material.emissive.setHex(0x123d1e);
-        // this.selectedSeat = INTERSECTED.name;
-        console.log(intersects[0].object.uuid);
         intersects[0].object.callback(INTERSECTED.name, intersects[0].object.uuid);
       }
     } else {
