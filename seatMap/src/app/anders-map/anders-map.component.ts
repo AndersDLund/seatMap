@@ -73,11 +73,12 @@ export class AndersMapComponent implements OnInit {
   intersects: any;
   intersected: any;
   currentHex: String;
+  seat: String;
 
   constructor() {
   }
   ngOnInit() {
-    this.selectedSeat = '7-4';
+    this.selectedSeat = '8C';
 
     scene.background = new THREE.Color('lightblue');
     this.mouse = new THREE.Vector2();
@@ -114,17 +115,6 @@ export class AndersMapComponent implements OnInit {
 
     this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
     this.engineMaterial = new THREE.MeshNormalMaterial();
-
-    // this.planeFrontGeometry = new THREE.Geometry(100, 100, 100);
-    // this.fv1 = new THREE.Vector3(5, 0, 0);
-    // this.fv2 = new THREE.Vector3(-7, 0, 0);
-    // this.fv3 = new THREE.Vector3(0, 7, 0);
-
-    // this.planeFrontGeometry.vertices.push(this.fv1);
-    // this.planeFrontGeometry.vertices.push(this.fv2);
-    // this.planeFrontGeometry.vertices.push(this.fv3);
-
-    // this.planeFrontGeometry.faces.push(new THREE.Face3(0, 2, 1));
 
     this.planeFrontGeometry = new THREE.CircleGeometry(4, 50, 0, Math.PI * 2);
 
@@ -258,8 +248,13 @@ export class AndersMapComponent implements OnInit {
     this.geometry.faces[5].color.setHex(0xf2f2f2);
 
     const col = document.getElementsByClassName('col-12');
+
     for (let i = 0; i <= 10; i++) {
       for (let j = 1; j <= 5; j++) {
+        if (j === 1) {this.seat = 'A'; }
+        if (j === 2) { this.seat = 'B'; }
+        if (j === 4) { this.seat = 'C'; }
+        if (j === 5) { this.seat = 'D'; }
         if (j === 3) {
           continue;
         } else if (j === 4 && i === 7) {
@@ -275,7 +270,7 @@ export class AndersMapComponent implements OnInit {
         } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0xb2279b);
-          box.name = i + '-' + j;
+          box.name = `${i + 1}${this.seat}`;
           box.position.z = i;
           box.position.x = j;
           box.callback = function (name) {
