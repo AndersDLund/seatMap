@@ -104,7 +104,7 @@ export class AndersMapComponent implements OnInit {
   }
   ngOnInit() {
     this.seatPrice = '';
-    this.selectedSeat = '8C';
+    this.selectedSeat = 'Seat: 8C';
     this.breakPointObserver
       .observe(['(max-width: 767px)'])
       .subscribe((state: BreakpointState) => {
@@ -437,7 +437,7 @@ export class AndersMapComponent implements OnInit {
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x0b1963);
-          box.name = `${i + 1}${this.seat}`;
+          box.name = `Seat: ${i + 1}${this.seat}`;
           box.position.z = i;
           box.position.x = j;
           box.callback = function (name) {
@@ -449,7 +449,7 @@ export class AndersMapComponent implements OnInit {
         } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x414203);
-          box.name = `${i + 1}${this.seat}`;
+          box.name = `Seat: ${i + 1}${this.seat}`;
           box.uuid = this.outsideIndex;
           box.position.z = i;
           box.position.x = j;
@@ -467,7 +467,7 @@ export class AndersMapComponent implements OnInit {
               bevelSegments: 5
             });
 
-            priceArray.push(textGeometry.parameters.text);
+            priceArray.push('Price:' + ' ' + textGeometry.parameters.text);
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textMesh.position.x = j - .6;
             textMesh.position.y = 1;
