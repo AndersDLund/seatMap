@@ -270,7 +270,7 @@ export class AndersMapComponent implements OnInit {
       scene.add(textMesh);
     });
 
-    this.legend3 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColorsr}));
+    this.legend3 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors}));
     this.legend3.position.x = 6.4;
     this.legend3.position.y = -0.7;
     this.legend3.position.z = 6;
