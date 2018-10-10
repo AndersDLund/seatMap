@@ -29,7 +29,7 @@ export class AndersMapComponent implements OnInit {
   controls: any;
   loader: any;
 
-  outsideIndex: number = 0;
+  outsideIndex = 0;
 
   text: any;
 
@@ -48,7 +48,7 @@ export class AndersMapComponent implements OnInit {
   selectedSeat: any;
   seatPrice: any;
 
-  dxPerFrame: number = .01;
+  dxPerFrame = .01;
 
   planeBody: any;
   planeBodyGeometry: any;
@@ -230,7 +230,7 @@ export class AndersMapComponent implements OnInit {
       textMesh.position.x = 6.7;
       textMesh.position.y = -2.5;
       textMesh.position.z = 6;
-      // textMesh.rotation.y = Math.PI / 7;
+      textMesh.rotation.x = -.3;
       scene.add(textMesh);
     });
 
@@ -260,6 +260,7 @@ export class AndersMapComponent implements OnInit {
       textMesh.position.y = -1.5;
       textMesh.position.z = 6;
       // textMesh.rotation.y = Math.PI / 7;
+      textMesh.rotation.x = -.3;
       scene.add(textMesh);
     });
 
@@ -288,6 +289,7 @@ export class AndersMapComponent implements OnInit {
       textMesh.position.y = -0.5;
       textMesh.position.z = 6;
       // textMesh.rotation.y = Math.PI / 7;
+      textMesh.rotation.x = -.3;
       scene.add(textMesh);
     });
 
@@ -452,6 +454,12 @@ export class AndersMapComponent implements OnInit {
     this.dxPerFrame = .01;
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
+    this.legend1.rotation.y += 0.01;
+    this.legend1.rotation.x += 0.01;
+    this.legend2.rotation.y += 0.01;
+    this.legend2.rotation.x += 0.01;
+    this.legend3.rotation.y += 0.01;
+    this.legend3.rotation.x += 0.01;
     renderer.render(scene, camera);
     requestAnimationFrame(this.render.bind(this));
     this.controls.update();
