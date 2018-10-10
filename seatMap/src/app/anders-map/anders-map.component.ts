@@ -132,7 +132,7 @@ export class AndersMapComponent implements OnInit {
     this.legendGeometry.faces[5].color.setHex(0xf2f2f2);
 
     this.sunGeometry = new THREE.SphereGeometry(3, 20, 7);
-    this.sunMaterial = new THREE.MeshBasicMaterial({ color: '#FF8C00'});
+    this.sunMaterial = new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors});
 
     this.cloudGeometry = new THREE.SphereGeometry(1, 10, 10);
     this.cloudMaterial = new THREE.MeshLambertMaterial({ color: 'white'});
@@ -394,6 +394,7 @@ export class AndersMapComponent implements OnInit {
     document.addEventListener('click', this.onMouseMove, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
+    this.sun.material.emissive.setHex(0xFF4500,'black');
     this.sun.position.x = -20;
     this.sun.position.y = 11;
     this.sun.position.z = -7;
