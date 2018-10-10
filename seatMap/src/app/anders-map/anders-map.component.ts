@@ -13,9 +13,6 @@ let box;
 const scene = new THREE.Scene();
 let textGeometry;
 const priceArray = [];
-// const randomNumber = Math.floor(Math.random() * 101).toString();
-// let selectedSeat = '7-4';
-// let textGeometry;
 
 @Component({
   selector: 'app-anders-map',
@@ -23,8 +20,6 @@ const priceArray = [];
   styleUrls: ['./anders-map.component.scss']
 })
 export class AndersMapComponent implements OnInit {
-  // scene: any = new THREE.Scene();
-  otherCamera: any;
   light: any;
   controls: any;
   loader: any;
@@ -38,9 +33,6 @@ export class AndersMapComponent implements OnInit {
   legend3: any;
   legendGeometry: any;
 
-  // textGeometry: any;
-  // textMaterial: any;
-  // box: any;
   seatMaterials: Array<any>;
   sun: any;
   objects: Array<any>;
@@ -99,7 +91,6 @@ export class AndersMapComponent implements OnInit {
   constructor() {
   }
   ngOnInit() {
-    // this.selectedSeat = '7-4';
     this.seatPrice = '';
     this.selectedSeat = '8C';
 
@@ -116,16 +107,8 @@ export class AndersMapComponent implements OnInit {
 
     raycaster = new THREE.Raycaster();
 
-    this.otherCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    this.otherCamera.position.z = 100;
-    this.otherCamera.position.y = 5;
-    this.otherCamera.position.x = 7;
-    scene.add(camera);
-    scene.add(this.otherCamera);
 
-    setTimeout(() => {
-      scene.activeCamera = this.otherCamera;
-    }, 5000);
+    scene.add(camera);
 
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
     this.material = new THREE.MeshLambertMaterial();
@@ -480,10 +463,7 @@ export class AndersMapComponent implements OnInit {
     const intersects = raycaster.intersectObjects(scene.children);
     const currentHex = intersects[0].object.material.emissive.getHex();
     if (currentHex !== 727395 && currentHex !== 4276739) {
-      // this.seat = '8C';
-      // this.seatPrice = '';
       return;
-      // console.log(currentHex);
     }
     if (intersects.length > 0) {
       if (intersects[0].object !== INTERSECTED) {
@@ -509,9 +489,11 @@ export class AndersMapComponent implements OnInit {
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
   onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.updateProjectionMatrix();
-}
+    console.log('resizing');
+    camera.aspect = window.innerWidth / window.innerHeight;
+    console.log(camera.aspect);
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 
 }
