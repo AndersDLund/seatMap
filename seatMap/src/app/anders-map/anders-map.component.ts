@@ -103,7 +103,7 @@ export class AndersMapComponent implements OnInit {
     this.seatPrice = '';
     this.selectedSeat = '8C';
 
-    scene.background = new THREE.Color('lightblue');
+    scene.background = new THREE.Color('lightgrey');
     this.mouse = new THREE.Vector2();
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -131,6 +131,12 @@ export class AndersMapComponent implements OnInit {
     this.material = new THREE.MeshLambertMaterial();
 
     this.legendGeometry = new THREE.BoxGeometry(.2, .2, .3);
+    this.legendGeometry.faces[0].color.setHex(0xe6e6e6);
+    this.legendGeometry.faces[1].color.setHex(0xe6e6e6);
+    this.legendGeometry.faces[2].color.setHex(0xf2f2f2);
+    this.legendGeometry.faces[3].color.setHex(0xf2f2f2);
+    this.legendGeometry.faces[4].color.setHex(0xf2f2f2);
+    this.legendGeometry.faces[5].color.setHex(0xf2f2f2);
 
     this.sunGeometry = new THREE.SphereGeometry(3, 20, 20);
     this.sunMaterial = new THREE.MeshNormalMaterial();
@@ -153,8 +159,8 @@ export class AndersMapComponent implements OnInit {
 
     this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
     this.planeWingMaterial = new THREE.MeshNormalMaterial();
-    this.v1 = new THREE.Vector3(10, 0, 0);
-    this.v2 = new THREE.Vector3(-8, 0, 0);
+    this.v1 = new THREE.Vector3(12, 0, 0);
+    this.v2 = new THREE.Vector3(-12, 0, 0);
     this.v3 = new THREE.Vector3(0, 7, 0);
 
     this.planeWingGeometry.vertices.push(this.v1);
@@ -170,7 +176,7 @@ export class AndersMapComponent implements OnInit {
     this.planeBody.position.z = 10;
     scene.add(this.planeBody);
 
-    this.runway = new THREE.Mesh(this.runwayGeometry, new THREE.MeshLambertMaterial({color: 'coral'}));
+    this.runway = new THREE.Mesh(this.runwayGeometry, new THREE.MeshLambertMaterial({color: 'black'}));
     this.runway.position.x = 3;
     this.runway.position.y = -.35;
     this.runway.position.z = 10;
@@ -188,7 +194,7 @@ export class AndersMapComponent implements OnInit {
 
 
     this.planeWing = new THREE.Mesh(this.planeWingGeometry, new THREE.MeshLambertMaterial({ color: 'gray' }));
-    this.planeWing.position.x = 3;
+    this.planeWing.position.x = 2.8;
     this.planeWing.position.y = -.4;
     this.planeWing.position.z = 1;
     this.planeWing.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
@@ -205,10 +211,10 @@ export class AndersMapComponent implements OnInit {
     this.planeFront.rotation.y = 45;
     scene.add(this.planeFront);
 
-    this.legend1 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ color: '#0x0b1963'}));
+    this.legend1 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors}));
     this.legend1.material.emissive.setHex(0x0b1963);
-    this.legend1.position.x = 6.5;
-    this.legend1.position.y = -2.5;
+    this.legend1.position.x = 6.4;
+    this.legend1.position.y = -2.7;
     this.legend1.position.z = 6;
     scene.add(this.legend1);
 
@@ -228,16 +234,16 @@ export class AndersMapComponent implements OnInit {
 
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.x = 6.7;
-      textMesh.position.y = -2.5;
+      textMesh.position.y = -2.7;
       textMesh.position.z = 6;
       textMesh.rotation.x = -.3;
       scene.add(textMesh);
     });
 
-    this.legend2 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ color: '#0xb2279b)'}));
-    this.legend2.material.emissive.setHex(0xb2279b);
-    this.legend2.position.x = 6.5;
-    this.legend2.position.y = -1.5;
+    this.legend2 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors}));
+    this.legend2.material.emissive.setHex(0x414203);
+    this.legend2.position.x = 6.4;
+    this.legend2.position.y = -1.7;
     this.legend2.position.z = 6;
     scene.add(this.legend2);
 
@@ -257,16 +263,16 @@ export class AndersMapComponent implements OnInit {
 
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.x = 6.7;
-      textMesh.position.y = -1.5;
+      textMesh.position.y = -1.7;
       textMesh.position.z = 6;
       // textMesh.rotation.y = Math.PI / 7;
       textMesh.rotation.x = -.3;
       scene.add(textMesh);
     });
 
-    this.legend3 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ color: '#0x0b1963'}));
-    this.legend3.position.x = 6.5;
-    this.legend3.position.y = -0.5;
+    this.legend3 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColorsr}));
+    this.legend3.position.x = 6.4;
+    this.legend3.position.y = -0.7;
     this.legend3.position.z = 6;
     scene.add(this.legend3);
 
@@ -286,10 +292,11 @@ export class AndersMapComponent implements OnInit {
 
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.x = 6.7;
-      textMesh.position.y = -0.5;
+      textMesh.position.y = -0.7;
       textMesh.position.z = 6;
       // textMesh.rotation.y = Math.PI / 7;
       textMesh.rotation.x = -.3;
+      // textMesh.rotation.y = Math.PI / 7;
       scene.add(textMesh);
     });
 
@@ -316,7 +323,7 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.engine);
 
     this.engine1 = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
-    this.engine1.position.x = 8.5;
+    this.engine1.position.x = 9;
     this.engine1.position.y = -.6;
     this.engine1.position.z = 3;
     this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI);
@@ -395,13 +402,13 @@ export class AndersMapComponent implements OnInit {
           scene.add(box);
         } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
-          box.material.emissive.setHex(0xb2279b);
+          box.material.emissive.setHex(0x414203);
           box.name = `${i + 1}${this.seat}`;
           box.uuid = this.outsideIndex;
           box.position.z = i;
           box.position.x = j;
           this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
 
             textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
               font: font,
@@ -472,10 +479,11 @@ export class AndersMapComponent implements OnInit {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
     const currentHex = intersects[0].object.material.emissive.getHex();
-    if (currentHex !== 727395 && currentHex !== 11675547) {
+    if (currentHex !== 727395 && currentHex !== 4276739) {
       // this.seat = '8C';
       // this.seatPrice = '';
       return;
+      // console.log(currentHex);
     }
     if (intersects.length > 0) {
       if (intersects[0].object !== INTERSECTED) {
