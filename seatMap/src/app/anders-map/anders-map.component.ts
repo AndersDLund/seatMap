@@ -219,7 +219,7 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.legend1);
 
     this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-      const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
       textGeometry = new THREE.TextGeometry('Your Seat', {
         font: font,
@@ -248,7 +248,7 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.legend2);
 
     this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-      const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
       textGeometry = new THREE.TextGeometry('Available', {
         font: font,
@@ -277,7 +277,7 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.legend3);
 
     this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-      const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
       textGeometry = new THREE.TextGeometry('Taken', {
         font: font,
@@ -408,7 +408,7 @@ export class AndersMapComponent implements OnInit {
           box.position.z = i;
           box.position.x = j;
           this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 'LightSteelBlue' });
 
             textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
               font: font,
