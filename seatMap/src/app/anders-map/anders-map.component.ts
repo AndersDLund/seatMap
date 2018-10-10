@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
 import { ThenableWebDriver } from 'selenium-webdriver';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 let raycaster;
 let INTERSECTED;
@@ -13,6 +14,7 @@ let box;
 const scene = new THREE.Scene();
 let textGeometry;
 const priceArray = [];
+let cameraView: number;
 
 @Component({
   selector: 'app-anders-map',
@@ -21,6 +23,7 @@ const priceArray = [];
 })
 export class AndersMapComponent implements OnInit {
   light: any;
+  sunLight: any;
   controls: any;
   loader: any;
 
@@ -50,6 +53,9 @@ export class AndersMapComponent implements OnInit {
 
   runway: any;
   runwayGeometry: any;
+
+  planeCover: any;
+  planeCoverGeometry: any;
 
   planeFront: any;
   planeFrontGeometry: any;
@@ -98,26 +104,31 @@ export class AndersMapComponent implements OnInit {
   currentHex: String;
   seat: String;
 
-  constructor() {
+  constructor(public breakPointObserver: BreakpointObserver) {
   }
   ngOnInit() {
     this.seatPrice = '';
     this.selectedSeat = '8C';
+    this.breakPointObserver
+      .observe(['(max-width: 767px)'])
+      .subscribe((state: BreakpointState) => {
+        if (state.matches) {
+          cameraView = 105;
+        } else {
+          cameraView = 75;
+        }
+      });
 
     scene.background = new THREE.Color('lightgrey');
     this.mouse = new THREE.Vector2();
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(cameraView, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 16;
     camera.position.y = 5;
     camera.position.x = 7;
-
-
     raycaster = new THREE.Raycaster();
-
-
     scene.add(camera);
 
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
@@ -132,7 +143,7 @@ export class AndersMapComponent implements OnInit {
     this.legendGeometry.faces[5].color.setHex(0xf2f2f2);
 
     this.sunGeometry = new THREE.SphereGeometry(3, 20, 7);
-    this.sunMaterial = new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors});
+    this.sunMaterial = new THREE.MeshLambertMaterial({ color: '#FF8C00'});
 
     this.cloudGeometry = new THREE.SphereGeometry(1, 10, 10);
     this.cloudMaterial = new THREE.MeshLambertMaterial({ color: 'white'});
@@ -151,7 +162,7 @@ export class AndersMapComponent implements OnInit {
     this.loader = new THREE.FontLoader();
 
     this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
-    this.planeWingMaterial = new THREE.MeshNormalMaterial();
+    this.planeWingMaterial = new THREE.MeshLambertMaterial();
     this.v1 = new THREE.Vector3(12, 0, 0);
     this.v2 = new THREE.Vector3(-12, 0, 0);
     this.v3 = new THREE.Vector3(0, 7, 0);
@@ -369,6 +380,11 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.engine1);
 
     this.light = new THREE.AmbientLight(0x404040, 3);
+    this.sunLight = new THREE.PointLight(0xFF8C00, .8, 80);
+    this.sunLight.position.x = -20;
+    this.sunLight.position.y = 50;
+    this.sunLight.position.z = -7;
+    scene.add(this.sunLight);
     scene.add(this.light);
 
 
@@ -394,7 +410,7 @@ export class AndersMapComponent implements OnInit {
     document.addEventListener('click', this.onMouseMove, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
-    this.sun.material.emissive.setHex(0xFF4500,'black');
+    this.sun.material.emissive.setHex(0xFF4500);
     this.sun.position.x = -20;
     this.sun.position.y = 11;
     this.sun.position.z = -7;
@@ -448,7 +464,7 @@ export class AndersMapComponent implements OnInit {
           box.position.z = i;
           box.position.x = j;
           this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 'LightSteelBlue' });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
             textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
               font: font,
