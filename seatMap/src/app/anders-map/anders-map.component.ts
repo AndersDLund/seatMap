@@ -32,6 +32,12 @@ export class AndersMapComponent implements OnInit {
   outsideIndex: number = 0;
 
   text: any;
+
+  legend1: any;
+  legend2: any;
+  legend3: any;
+  legendGeometry: any;
+
   // textGeometry: any;
   // textMaterial: any;
   // box: any;
@@ -124,6 +130,8 @@ export class AndersMapComponent implements OnInit {
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
     this.material = new THREE.MeshLambertMaterial();
 
+    this.legendGeometry = new THREE.BoxGeometry(.2, .2, .3);
+
     this.sunGeometry = new THREE.SphereGeometry(3, 20, 20);
     this.sunMaterial = new THREE.MeshNormalMaterial();
 
@@ -141,10 +149,12 @@ export class AndersMapComponent implements OnInit {
 
     this.runwayGeometry = new THREE.PlaneGeometry(1, 20, 32);
 
+    this.loader = new THREE.FontLoader();
+
     this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
     this.planeWingMaterial = new THREE.MeshNormalMaterial();
     this.v1 = new THREE.Vector3(10, 0, 0);
-    this.v2 = new THREE.Vector3(-7, 0, 0);
+    this.v2 = new THREE.Vector3(-8, 0, 0);
     this.v3 = new THREE.Vector3(0, 7, 0);
 
     this.planeWingGeometry.vertices.push(this.v1);
@@ -195,6 +205,92 @@ export class AndersMapComponent implements OnInit {
     this.planeFront.rotation.y = 45;
     scene.add(this.planeFront);
 
+    this.legend1 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ color: '#0x0b1963'}));
+    this.legend1.material.emissive.setHex(0x0b1963);
+    this.legend1.position.x = 6.5;
+    this.legend1.position.y = -2.5;
+    this.legend1.position.z = 6;
+    scene.add(this.legend1);
+
+    this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+
+      textGeometry = new THREE.TextGeometry('Your Seat', {
+        font: font,
+        size: 0.2,
+        height: 0.1,
+        curveSegments: 12,
+        // bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelSegments: 5
+      });
+
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.position.x = 6.7;
+      textMesh.position.y = -2.5;
+      textMesh.position.z = 6;
+      // textMesh.rotation.y = Math.PI / 7;
+      scene.add(textMesh);
+    });
+
+    this.legend2 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ color: '#0xb2279b)'}));
+    this.legend2.material.emissive.setHex(0xb2279b);
+    this.legend2.position.x = 6.5;
+    this.legend2.position.y = -1.5;
+    this.legend2.position.z = 6;
+    scene.add(this.legend2);
+
+    this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+
+      textGeometry = new THREE.TextGeometry('Available', {
+        font: font,
+        size: 0.2,
+        height: 0.1,
+        curveSegments: 12,
+        // bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelSegments: 5
+      });
+
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.position.x = 6.7;
+      textMesh.position.y = -1.5;
+      textMesh.position.z = 6;
+      // textMesh.rotation.y = Math.PI / 7;
+      scene.add(textMesh);
+    });
+
+    this.legend3 = new THREE.Mesh(this.legendGeometry, new THREE.MeshLambertMaterial({ color: '#0x0b1963'}));
+    this.legend3.position.x = 6.5;
+    this.legend3.position.y = -0.5;
+    this.legend3.position.z = 6;
+    scene.add(this.legend3);
+
+    this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 'blanchedalmond' });
+
+      textGeometry = new THREE.TextGeometry('Taken', {
+        font: font,
+        size: 0.2,
+        height: 0.1,
+        curveSegments: 12,
+        // bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelSegments: 5
+      });
+
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.position.x = 6.7;
+      textMesh.position.y = -0.5;
+      textMesh.position.z = 6;
+      // textMesh.rotation.y = Math.PI / 7;
+      scene.add(textMesh);
+    });
+
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud1.position.x = -4.5;
     this.cloud1.position.y = 6.2;
@@ -218,7 +314,7 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.engine);
 
     this.engine1 = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
-    this.engine1.position.x = 8;
+    this.engine1.position.x = 8.5;
     this.engine1.position.y = -.6;
     this.engine1.position.z = 3;
     this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI);
@@ -254,8 +350,6 @@ export class AndersMapComponent implements OnInit {
     this.sun.position.y = 11;
     this.sun.position.z = -7;
     scene.add(this.sun);
-
-    this.loader = new THREE.FontLoader();
 
     this.seatMaterials = [
       new THREE.MeshLambertMaterial({ color: 0xff0000}),
