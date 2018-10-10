@@ -82,10 +82,20 @@ export class AndersMapComponent implements OnInit {
 
   cloudGeometry: any;
   cloudMaterial: any;
+  sunCloud1: any;
+  sunCloud2: any;
+  sunCloud3: any;
+  sunCloud4: any;
   cloud1: any;
   cloud2: any;
   cloud3: any;
   cloud4: any;
+  cloud5: any;
+  cloud6: any;
+  cloud7: any;
+  cloud8: any;
+  cloud9: any;
+
 
   geometry: any;
   material: any;
@@ -138,11 +148,11 @@ export class AndersMapComponent implements OnInit {
     this.legendGeometry.faces[4].color.setHex(0xf2f2f2);
     this.legendGeometry.faces[5].color.setHex(0xf2f2f2);
 
-    this.sunGeometry = new THREE.SphereGeometry(3, 20, 20);
-    this.sunMaterial = new THREE.MeshNormalMaterial();
+    this.sunGeometry = new THREE.SphereGeometry(3, 20, 7);
+    this.sunMaterial = new THREE.MeshBasicMaterial({ color: '#FF8C00'});
 
     this.cloudGeometry = new THREE.SphereGeometry(1, 10, 10);
-    this.cloudMaterial = new THREE.MeshNormalMaterial();
+    this.cloudMaterial = new THREE.MeshLambertMaterial({ color: 'white'});
 
     this.engineGeometry = new THREE.CylinderGeometry(.5, .5, 4, 32);
     this.engineMaterial = new THREE.MeshLambertMaterial({ color: 'gray' });
@@ -302,17 +312,63 @@ export class AndersMapComponent implements OnInit {
 
     this.cloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud1.position.x = -4.5;
-    this.cloud1.position.y = 6.2;
+    this.cloud1.position.y = 2;
     this.cloud1.position.z = -20;
     this.cloud2 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud2.position.x = -5.2;
-    this.cloud2.position.y = 5;
+    this.cloud2.position.y = 1;
     this.cloud2.position.z = -20;
     this.cloud3 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
     this.cloud3.position.x = -3.8;
-    this.cloud3.position.y = 5;
+    this.cloud3.position.y = 1;
     this.cloud3.position.z = -20;
     scene.add(this.cloud1, this.cloud2, this.cloud3);
+
+    this.cloud4 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud4.position.x = 9.5;
+    this.cloud4.position.y = -9;
+    this.cloud4.position.z = -40;
+    this.cloud5 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud5.position.x = 10.2;
+    this.cloud5.position.y = -10;
+    this.cloud5.position.z = -40;
+    this.cloud6 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud6.position.x = 8.8;
+    this.cloud6.position.y = -10;
+    this.cloud6.position.z = -40;
+    scene.add(this.cloud4, this.cloud5, this.cloud6);
+
+    this.cloud7 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud7.position.x = 4.5;
+    this.cloud7.position.y = 11;
+    this.cloud7.position.z = -60;
+    this.cloud8 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud8.position.x = 5.2;
+    this.cloud8.position.y = 10;
+    this.cloud8.position.z = -60;
+    this.cloud9 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.cloud9.position.x = 3.8;
+    this.cloud9.position.y = 10;
+    this.cloud9.position.z = -60;
+    scene.add(this.cloud7, this.cloud8, this.cloud9);
+
+    this.sunCloud1 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.sunCloud1.position.x = -17.5;
+    this.sunCloud1.position.y = 10;
+    this.sunCloud1.position.z = -4.5;
+    this.sunCloud2 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.sunCloud2.position.x = -14;
+    this.sunCloud2.position.y = 9;
+    this.sunCloud2.position.z = -4.5;
+    this.sunCloud3 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.sunCloud3.position.x = -15;
+    this.sunCloud3.position.y = 10;
+    this.sunCloud3.position.z = -4.5;
+    this.sunCloud4 = new THREE.Mesh(this.cloudGeometry, this.cloudMaterial);
+    this.sunCloud4.position.x = -16.6;
+    this.sunCloud4.position.y = 9;
+    this.sunCloud4.position.z = -4.5;
+    scene.add(this.sunCloud1, this.sunCloud2, this.sunCloud3, this.sunCloud4);
 
 
     this.engine = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
@@ -458,7 +514,13 @@ export class AndersMapComponent implements OnInit {
     this.cloud1.position.z += this.dxPerFrame;
     this.cloud2.position.z += this.dxPerFrame;
     this.cloud3.position.z += this.dxPerFrame;
-    this.dxPerFrame = .01;
+    this.cloud4.position.z += this.dxPerFrame;
+    this.cloud5.position.z += this.dxPerFrame;
+    this.cloud6.position.z += this.dxPerFrame;
+    this.cloud7.position.z += this.dxPerFrame;
+    this.cloud8.position.z += this.dxPerFrame;
+    this.cloud9.position.z += this.dxPerFrame;
+    this.dxPerFrame = 0.003;
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
     this.legend1.rotation.y += 0.01;
