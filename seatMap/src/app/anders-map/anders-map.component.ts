@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import TrackballControls from 'three-trackballcontrols';
 import { ThenableWebDriver } from 'selenium-webdriver';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 let raycaster;
 let INTERSECTED;
@@ -13,6 +14,7 @@ let box;
 const scene = new THREE.Scene();
 let textGeometry;
 const priceArray = [];
+let cameraView: number;
 
 @Component({
   selector: 'app-anders-map',
@@ -98,26 +100,31 @@ export class AndersMapComponent implements OnInit {
   currentHex: String;
   seat: String;
 
-  constructor() {
+  constructor(public breakPointObserver: BreakpointObserver) {
   }
   ngOnInit() {
     this.seatPrice = '';
     this.selectedSeat = '8C';
+    this.breakPointObserver
+      .observe(['(max-width: 767px)'])
+      .subscribe((state: BreakpointState) => {
+        if (state.matches) {
+          cameraView = 115;
+        } else {
+          cameraView = 85;
+        }
+      });
 
     scene.background = new THREE.Color('lightgrey');
     this.mouse = new THREE.Vector2();
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(cameraView, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 16;
     camera.position.y = 5;
     camera.position.x = 7;
-
-
     raycaster = new THREE.Raycaster();
-
-
     scene.add(camera);
 
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
@@ -132,7 +139,7 @@ export class AndersMapComponent implements OnInit {
     this.legendGeometry.faces[5].color.setHex(0xf2f2f2);
 
     this.sunGeometry = new THREE.SphereGeometry(3, 20, 7);
-    this.sunMaterial = new THREE.MeshBasicMaterial({ color: '#FF8C00'});
+    this.sunMaterial = new THREE.MeshBasicMaterial({ color: '#FF8C00', wireframe: true});
 
     this.cloudGeometry = new THREE.SphereGeometry(1, 10, 10);
     this.cloudMaterial = new THREE.MeshLambertMaterial({ color: 'white'});
