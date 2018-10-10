@@ -390,7 +390,7 @@ export class AndersMapComponent implements OnInit {
     this.controls.keys = [65, 83, 68];
 
     window.addEventListener('change', this.render);
-    window.addEventListener('resize', this.onWindowResize, false);
+    renderer.domElement.addEventListener('resize', this.onWindowResize, false);
     document.addEventListener('click', this.onMouseMove, false);
 
     this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
@@ -552,11 +552,10 @@ export class AndersMapComponent implements OnInit {
   de2ra = function (degree) { return degree * (Math.PI / 180); };
 
   onWindowResize() {
-    console.log('resizing');
     camera.aspect = window.innerWidth / window.innerHeight;
-    console.log(camera.aspect);
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+
   }
 
 }
