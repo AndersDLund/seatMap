@@ -373,7 +373,7 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.engine);
 
     this.engine1 = new THREE.Mesh(this.engineGeometry, this.engineMaterial);
-    this.engine1.position.x = 9;
+    this.engine1.position.x = 9.5;
     this.engine1.position.y = -.6;
     this.engine1.position.z = 3;
     this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI);
