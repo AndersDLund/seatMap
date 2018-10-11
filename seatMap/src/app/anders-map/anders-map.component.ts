@@ -519,10 +519,10 @@ export class AndersMapComponent implements OnInit {
     this.cloud4.position.z += this.dxPerFrame;
     this.cloud5.position.z += this.dxPerFrame;
     this.cloud6.position.z += this.dxPerFrame;
-    this.cloud7.position.z += this.dxPerFrame;
-    this.cloud8.position.z += this.dxPerFrame;
-    this.cloud9.position.z += this.dxPerFrame;
-    this.dxPerFrame = 0.003;
+    this.cloud7.position.z += this.dxPerFrame + 0.02;
+    this.cloud8.position.z += this.dxPerFrame + 0.02;
+    this.cloud9.position.z += this.dxPerFrame + 0.02;
+    this.dxPerFrame = 0.004;
     this.sun.rotation.y += 0.001;
     this.sun.rotation.x += 0.001;
     this.legend1.rotation.y += 0.01;
