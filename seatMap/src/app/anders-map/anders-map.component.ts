@@ -142,7 +142,7 @@ export class AndersMapComponent implements OnInit {
     this.legendGeometry.faces[4].color.setHex(0xf2f2f2);
     this.legendGeometry.faces[5].color.setHex(0xf2f2f2);
 
-    this.sunGeometry = new THREE.SphereGeometry(3, 20, 7);
+    this.sunGeometry = new THREE.SphereGeometry(3, 20, 20);
     this.sunMaterial = new THREE.MeshLambertMaterial({ color: '#FF8C00'});
 
     this.cloudGeometry = new THREE.SphereGeometry(1, 10, 10);
@@ -380,9 +380,9 @@ export class AndersMapComponent implements OnInit {
     scene.add(this.engine1);
 
     this.light = new THREE.AmbientLight(0x404040, 3);
-    this.sunLight = new THREE.PointLight(0xFF8C00, .8, 80);
+    this.sunLight = new THREE.PointLight(0xFF8C00, 1, 55);
     this.sunLight.position.x = -20;
-    this.sunLight.position.y = 50;
+    this.sunLight.position.y = 45;
     this.sunLight.position.z = -7;
     scene.add(this.sunLight);
     scene.add(this.light);
