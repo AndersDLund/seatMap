@@ -381,7 +381,7 @@ export class AndersMapComponent implements OnInit {
 
     // this.light = new THREE.AmbientLight(0xffffff, .5);
     this.light = new THREE.AmbientLight(0x404040, 3);
-    this.sunLight = new THREE.PointLight(0xFF8C00, 1, 55);
+    this.sunLight = new THREE.PointLight(0xFF8C00, 2, 53);
     this.sunLight.position.x = -20;
     this.sunLight.position.y = 45;
     this.sunLight.position.z = -7;
