@@ -108,12 +108,12 @@ export class AndersMapComponent implements OnInit {
   }
   ngOnInit() {
     this.seatPrice = '';
-    this.selectedSeat = 'Seat: 8C';
+    this.selectedSeat = 'Seat : 8C';
     this.breakPointObserver
       .observe(['(max-width: 767px)'])
       .subscribe((state: BreakpointState) => {
         if (state.matches) {
-          cameraView = 105;
+          cameraView = 110;
         } else {
           cameraView = 75;
         }
@@ -222,7 +222,7 @@ export class AndersMapComponent implements OnInit {
     this.legend1.position.z = 6;
     scene.add(this.legend1);
 
-    this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+    this.loader.load('/node_modules/three/examples/fonts/Cardo_Bold.json', function (font) {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
       textGeometry = new THREE.TextGeometry('Your Seat', {
@@ -251,7 +251,7 @@ export class AndersMapComponent implements OnInit {
     this.legend2.position.z = 6;
     scene.add(this.legend2);
 
-    this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+    this.loader.load('/node_modules/three/examples/fonts/Cardo_Bold.json', function (font) {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
       textGeometry = new THREE.TextGeometry('Available', {
@@ -280,7 +280,7 @@ export class AndersMapComponent implements OnInit {
     this.legend3.position.z = 6;
     scene.add(this.legend3);
 
-    this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+    this.loader.load('/node_modules/three/examples/fonts/Cardo_Bold.json', function (font) {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
       textGeometry = new THREE.TextGeometry('Taken', {
@@ -379,11 +379,13 @@ export class AndersMapComponent implements OnInit {
     this.engine1.rotation.set(-Math.PI / 2, Math.PI / 3000, Math.PI);
     scene.add(this.engine1);
 
+    // this.light = new THREE.AmbientLight(0xffffff, .5);
     this.light = new THREE.AmbientLight(0x404040, 3);
     this.sunLight = new THREE.PointLight(0xFF8C00, 1, 55);
     this.sunLight.position.x = -20;
     this.sunLight.position.y = 45;
     this.sunLight.position.z = -7;
+
     scene.add(this.sunLight);
     scene.add(this.light);
 
@@ -447,7 +449,7 @@ export class AndersMapComponent implements OnInit {
         } else if (j === 4 && i === 7) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x0b1963);
-          box.name = `Seat: ${i + 1}${this.seat}`;
+          box.name = `Seat : ${i + 1}${this.seat}`;
           box.position.z = i;
           box.position.x = j;
           box.callback = function (name) {
@@ -459,11 +461,11 @@ export class AndersMapComponent implements OnInit {
         } else if ((j === 2 && i === 5) || (j === 1 && i === 8) || (j === 5 && i === 1) || (j === 4 && i === 3)) {
           box = new THREE.Mesh(this.geometry, new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x414203);
-          box.name = `Seat: ${i + 1}${this.seat}`;
+          box.name = `Seat : ${i + 1}${this.seat}`;
           box.uuid = this.outsideIndex;
           box.position.z = i;
           box.position.x = j;
-          this.loader.load('/node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+          this.loader.load('/node_modules/three/examples/fonts/Cardo_Bold.json', function (font) {
             const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
 
             textGeometry = new THREE.TextGeometry('$' + Math.floor(Math.random() * 101).toString() + '.00', {
