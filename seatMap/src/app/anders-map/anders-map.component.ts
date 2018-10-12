@@ -26,15 +26,24 @@ export class AndersMapComponent implements OnInit {
   sunLight: any;
   controls: any;
   loader: any;
+  mapLoader: any;
 
   outsideIndex = 0;
 
   text: any;
 
+  line: any;
+  lineMaterial: any;
+  lineGeometry: any;
+
   legend1: any;
   legend2: any;
   legend3: any;
   legendGeometry: any;
+
+  locationSphere: any;
+  locationSphereGeometry: any;
+  locationSphereMaterial: any;
 
   seatMaterials: Array<any>;
   sun: any;
@@ -134,6 +143,26 @@ export class AndersMapComponent implements OnInit {
     this.geometry = new THREE.BoxGeometry(.5, .7, .3);
     this.material = new THREE.MeshLambertMaterial();
 
+    this.lineMaterial = new THREE.LineBasicMaterial({ color: 'black', linewidth: 2});
+    this.lineGeometry = new THREE.Geometry();
+    this.lineGeometry.vertices.push(new THREE.Vector3(3, 3.3, 0));
+    this.lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    this.lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    this.line = new THREE.Line(this.lineGeometry, this.lineMaterial);
+    this.line.position.x = -17.5;
+    this.line.position.y = -6.5;
+    this.line.position.z = 3;
+    this.line.rotation.x = 1;
+    scene.add(this.line);
+
+    this.locationSphereMaterial = new THREE.MeshLambertMaterial({color: 'black'});
+    this.locationSphereGeometry = new THREE.SphereGeometry(0.15, 10, 30);
+    this.locationSphere = new THREE.Mesh(this.locationSphereGeometry, this.locationSphereMaterial);
+    this.locationSphere.position.x = -17;
+    this.locationSphere.position.y = -6.3;
+    this.locationSphere.position.z = 3;
+    scene.add(this.locationSphere);
+
     this.legendGeometry = new THREE.BoxGeometry(.2, .2, .3);
     this.legendGeometry.faces[0].color.setHex(0xe6e6e6);
     this.legendGeometry.faces[1].color.setHex(0xe6e6e6);
@@ -160,6 +189,7 @@ export class AndersMapComponent implements OnInit {
     this.runwayGeometry = new THREE.PlaneGeometry(1, 20, 32);
 
     this.loader = new THREE.FontLoader();
+    this.mapLoader = new THREE.ObjectLoader();
 
     this.planeWingGeometry = new THREE.Geometry(200, 200, 200);
     this.planeWingMaterial = new THREE.MeshLambertMaterial();
@@ -221,6 +251,25 @@ export class AndersMapComponent implements OnInit {
     this.legend1.position.y = -2.7;
     this.legend1.position.z = 6;
     scene.add(this.legend1);
+
+    this.mapLoader.load('../assets/united1.json', function(obj) {
+      obj.rotation.y = 4;
+      obj.position.x = -19;
+      obj.position.y = -12;
+      obj.position.z = -1;
+      // obj.overrideMaterial = new THREE.MeshLambertMaterial;
+      obj.children.splice(2, 1);
+      obj.children.splice(6, 1);
+      obj.children.splice(33, 1);
+      obj.children.splice(4, 1);
+      obj.children.splice(14, 1);
+      console.log(obj);
+      scene.add(obj);
+    }, function(xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    }, function(err) {
+      console.error(err);
+    });
 
     this.loader.load('/node_modules/three/examples/fonts/Cardo_Bold.json', function (font) {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 'white' });
