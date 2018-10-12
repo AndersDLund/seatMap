@@ -479,7 +479,7 @@ export class AndersMapComponent implements OnInit {
               bevelSegments: 5
             });
 
-            priceArray.push('Price:' + ' ' + textGeometry.parameters.text);
+            priceArray.push('Price :' + ' ' + textGeometry.parameters.text);
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textMesh.position.x = j - .6;
             textMesh.position.y = 1;
