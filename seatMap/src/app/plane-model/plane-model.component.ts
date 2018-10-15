@@ -51,12 +51,12 @@ export class PlaneModelComponent implements OnInit {
     geometry = new THREE.BoxGeometry(.5, .7, .3);
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = -45;
-    camera.position.y = 18;
-    camera.position.x = 69.29;
+    camera.position.z = -53.48;
+    camera.position.y = 6.497;
+    camera.position.x = 24.172;
     camera.rotation.y = 4;
     raycaster = new THREE.Raycaster();
-    controls = new TrackballControls(camera, renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
     controls.noPan = false;
     controls.noRotate = false;
     controls.noZoom = false;
