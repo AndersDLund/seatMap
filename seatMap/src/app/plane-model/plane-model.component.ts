@@ -56,7 +56,7 @@ export class PlaneModelComponent implements OnInit {
     camera.position.x = 24.172;
     camera.rotation.y = 4;
     raycaster = new THREE.Raycaster();
-    controls = new OrbitControls(camera, renderer.domElement);
+    controls = new TrackballControls(camera, renderer.domElement);
     controls.noPan = false;
     controls.noRotate = false;
     controls.noZoom = false;
