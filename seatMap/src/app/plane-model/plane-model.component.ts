@@ -16,14 +16,25 @@ let raycaster;
 let INTERSECTED;
 let geometry;
 
-let skyGeometry;
-let sky;
-
 let roadGeometry;
 let road;
 
 let ground;
 let groundGeomety;
+
+let pyramid;
+let pyramidGeometry;
+
+let sun;
+let sunGeometry;
+
+let sunlight;
+
+let cloud1;
+let cloud2;
+let cloud3;
+let cloud4;
+let cloudGeometry;
 
 @Component({
   selector: 'app-plane-model',
@@ -40,7 +51,7 @@ export class PlaneModelComponent implements OnInit {
     geometry = new THREE.BoxGeometry(.5, .7, .3);
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = -50;
+    camera.position.z = -45;
     camera.position.y = 18;
     camera.position.x = 69.29;
     camera.rotation.y = 4;
@@ -66,30 +77,75 @@ export class PlaneModelComponent implements OnInit {
       roadGeometry = new THREE.PlaneGeometry(28, 175, 20);
       road = new THREE.Mesh(roadGeometry, new THREE.MeshLambertMaterial({ color: 'brown'}));
       road.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
-      road.position.y = -7.5;
-      // road.position.x = -20;
+      road.position.y = -7.8;
       road.position.z = 40;
       scene.add(road);
 
-      for (let i = 0; i < 1000; i ++) {
+      pyramidGeometry = new THREE.TetrahedronGeometry(60, 0);
+      pyramidGeometry.applyMatrix(new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, -1).normalize(), Math.atan(Math.sqrt(2))));
+      pyramid = new THREE.Mesh(pyramidGeometry, new THREE.MeshLambertMaterial({color: 'brown'}));
+      pyramid.position.x = -52;
+      pyramid.position.y = -4.8;
+      pyramid.position.z = 160;
+      // pyramid.rotation.x = 6.7;s
+      scene.add(pyramid);
+
+      sunGeometry = new THREE.SphereGeometry(15, 20, 20);
+      sun = new THREE.Mesh(sunGeometry, new THREE.MeshLambertMaterial({color: 'orange'}));
+      sun.position.x = -68;
+      sun.position.y = 50;
+      sun.position.z = 200;
+      scene.add(sun);
+
+      sunlight = new THREE.PointLight('orange', 10, 250);
+      // sunlight.position.set(-58, 60, 180);
+      sunlight.position.x = -68;
+      sunlight.position.y = 50;
+      sunlight.position.z = 200;
+      scene.add(sunlight);
+
+      cloudGeometry = new THREE.SphereGeometry(10, 20, 20);
+      cloud1 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
+      cloud2 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
+      cloud3 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
+      cloud4 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
+      cloud1.position.x = -500;
+      cloud1.position.y = 60;
+      cloud1.position.z = 200;
+
+      cloud2.position.x = -530;
+      cloud2.position.y = 60;
+      cloud2.position.z = 200;
+
+      cloud3.position.x = -515;
+      cloud3.position.y = 70;
+      cloud3.position.z = 200;
+
+      cloud4.position.x = -545;
+      cloud4.position.y = 70;
+      cloud4.position.z = 200;
+
+      scene.add(cloud1, cloud2, cloud3, cloud4);
+
+      for (let i = 0; i < 1200; i ++) {
         groundGeomety = new THREE.IcosahedronGeometry(4, 0);
         ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'brown' }));
         ground.rotation.y = Math.floor(Math.random() * 11);
         ground.rotation.x = Math.floor(Math.random() * 11);
         ground.position.y = -10.9;
         ground.position.z = Math.floor(Math.random() * -200) + 150;
-        ground.position.x = Math.floor(Math.random() * 70) + 10;
+        ground.position.x = Math.floor(Math.random() * 45) + 10;
         scene.add(ground);
       }
 
-      for (let i = 0; i < 1000; i ++) {
+      for (let i = 0; i < 4000; i ++) {
         groundGeomety = new THREE.IcosahedronGeometry(4, 0);
         ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'brown' }));
         ground.rotation.y = Math.floor(Math.random() * 11);
         ground.rotation.x = Math.floor(Math.random() * 11);
         ground.position.y = -10.9;
-        ground.position.z = Math.floor(Math.random() * 200) - 50;
-        ground.position.x = Math.floor(Math.random() * -70) - 10;
+        ground.position.z = Math.floor(Math.random() * 425) - 50;
+        ground.position.x = Math.floor(Math.random() * -250) - 10;
         scene.add(ground);
       }
 
