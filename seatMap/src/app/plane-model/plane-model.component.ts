@@ -10,6 +10,7 @@ let light;
 let loader;
 let renderer;
 let controls;
+let box;
 
 @Component({
   selector: 'app-plane-model',
@@ -17,15 +18,17 @@ let controls;
   styleUrls: ['./plane-model.component.scss']
 })
 export class PlaneModelComponent implements OnInit {
+  geometry: any;
 
   constructor() { }
 
   ngOnInit() {
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer();
+    this.geometry = new THREE.BoxGeometry(.5, .7, .3);
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = -238;
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = -100;
     camera.position.y = 17.60;
     camera.position.x = 69.29;
     camera.rotation.y = 4;
@@ -39,20 +42,35 @@ export class PlaneModelComponent implements OnInit {
     loader = new FBXLoader();
     scene.add(camera);
     scene.add(light);
-    loader.load('assets/a380.fbx', function(object3d) {
+    loader.load('assets/a380.fbx', function (object3d) {
       object3d.children.splice(10, 1);
       console.log(object3d);
       // object3d.position.y = 100;
-      object3d.scale.set(.05, .05, .05);
+      object3d.scale.set(.01, .01, .01);
 
       scene.add(object3d);
+
+      for (let i = 0; i <= 30; i++) {
+        for (let j = 1; j <= 5; j++) {
+          box = new THREE.Mesh(new THREE.BoxGeometry(.5, .7, .3), new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
+          box.material.emissive.setHex(0x0b1963);
+          // box.name = `Seat : ${i + 1}${this.seat}`;
+          if (j === 3) {
+            continue;
+          } else {
+            box.position.z = i - 12;
+            box.position.x = j - 3;
+            scene.add(box);
+          }
+        }
+      }
     },
-    function(xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '%loaded');
-    },
-    function(error) {
-      console.log(error);
-    });
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '%loaded');
+      },
+      function (error) {
+        console.log(error);
+      });
     this.render();
 
   }
