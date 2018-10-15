@@ -112,19 +112,19 @@ export class PlaneModelComponent implements OnInit {
       cloud2 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
       cloud3 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
       cloud4 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
-      cloud1.position.x = -500;
+      cloud1.position.x = -300;
       cloud1.position.y = 60;
       cloud1.position.z = 200;
 
-      cloud2.position.x = -530;
+      cloud2.position.x = -330;
       cloud2.position.y = 60;
       cloud2.position.z = 200;
 
-      cloud3.position.x = -515;
+      cloud3.position.x = -315;
       cloud3.position.y = 70;
       cloud3.position.z = 200;
 
-      cloud4.position.x = -545;
+      cloud4.position.x = -345;
       cloud4.position.y = 70;
       cloud4.position.z = 200;
 
