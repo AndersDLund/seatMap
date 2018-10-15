@@ -75,7 +75,7 @@ export class PlaneModelComponent implements OnInit {
 
 
       roadGeometry = new THREE.PlaneGeometry(28, 175, 20);
-      road = new THREE.Mesh(roadGeometry, new THREE.MeshLambertMaterial({ color: 'brown'}));
+      road = new THREE.Mesh(roadGeometry, new THREE.MeshLambertMaterial({ color: 'grey'}));
       road.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
       road.position.y = -7.8;
       road.position.z = 40;
@@ -83,7 +83,7 @@ export class PlaneModelComponent implements OnInit {
 
       pyramidGeometry = new THREE.TetrahedronGeometry(60, 0);
       pyramidGeometry.applyMatrix(new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, -1).normalize(), Math.atan(Math.sqrt(2))));
-      pyramid = new THREE.Mesh(pyramidGeometry, new THREE.MeshLambertMaterial({color: 'brown'}));
+      pyramid = new THREE.Mesh(pyramidGeometry, new THREE.MeshLambertMaterial({color: 'grey'}));
       pyramid.position.x = -52;
       pyramid.position.y = -4.8;
       pyramid.position.z = 160;
@@ -97,7 +97,7 @@ export class PlaneModelComponent implements OnInit {
       sun.position.z = 200;
       scene.add(sun);
 
-      sunlight = new THREE.PointLight('orange', 10, 250);
+      sunlight = new THREE.PointLight('orange', 3, 150);
       // sunlight.position.set(-58, 60, 180);
       sunlight.position.x = -68;
       sunlight.position.y = 50;
@@ -129,7 +129,7 @@ export class PlaneModelComponent implements OnInit {
 
       for (let i = 0; i < 1200; i ++) {
         groundGeomety = new THREE.IcosahedronGeometry(4, 0);
-        ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'brown' }));
+        ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'grey' }));
         ground.rotation.y = Math.floor(Math.random() * 11);
         ground.rotation.x = Math.floor(Math.random() * 11);
         ground.position.y = -10.9;
@@ -140,7 +140,7 @@ export class PlaneModelComponent implements OnInit {
 
       for (let i = 0; i < 4000; i ++) {
         groundGeomety = new THREE.IcosahedronGeometry(4, 0);
-        ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'brown' }));
+        ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'grey' }));
         ground.rotation.y = Math.floor(Math.random() * 11);
         ground.rotation.x = Math.floor(Math.random() * 11);
         ground.position.y = -10.9;
