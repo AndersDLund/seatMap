@@ -75,11 +75,11 @@ export class PlaneModelComponent implements OnInit {
       scene.add(object3d);
 
 
-      roadGeometry = new THREE.PlaneGeometry(28, 175, 20);
+      roadGeometry = new THREE.PlaneGeometry(28, 425, 20);
       road = new THREE.Mesh(roadGeometry, new THREE.MeshLambertMaterial({ color: 'grey'}));
       road.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
       road.position.y = -7.8;
-      road.position.z = 40;
+      road.position.z = 160;
       scene.add(road);
 
       pyramidGeometry = new THREE.TetrahedronGeometry(60, 0);
@@ -111,32 +111,32 @@ export class PlaneModelComponent implements OnInit {
       cloud2 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
       cloud3 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
       cloud4 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
-      cloud1.position.x = -500;
+      cloud1.position.x = -300;
       cloud1.position.y = 60;
       cloud1.position.z = 200;
 
-      cloud2.position.x = -530;
+      cloud2.position.x = -330;
       cloud2.position.y = 60;
       cloud2.position.z = 200;
 
-      cloud3.position.x = -515;
+      cloud3.position.x = -315;
       cloud3.position.y = 70;
       cloud3.position.z = 200;
 
-      cloud4.position.x = -545;
+      cloud4.position.x = -345;
       cloud4.position.y = 70;
       cloud4.position.z = 200;
 
       scene.add(cloud1, cloud2, cloud3, cloud4);
 
-      for (let i = 0; i < 1200; i ++) {
+      for (let i = 0; i < 1500; i ++) {
         groundGeomety = new THREE.IcosahedronGeometry(4, 0);
         ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'grey' }));
         ground.rotation.y = Math.floor(Math.random() * 11);
         ground.rotation.x = Math.floor(Math.random() * 11);
         ground.position.y = -10.9;
-        ground.position.z = Math.floor(Math.random() * -200) + 150;
-        ground.position.x = Math.floor(Math.random() * 45) + 10;
+        ground.position.z = Math.floor(Math.random() * -425) + 375;
+        ground.position.x = Math.floor(Math.random() * 75) + 10;
         scene.add(ground);
       }
 
