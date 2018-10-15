@@ -13,6 +13,12 @@ let controls;
 let box;
 let geometry;
 
+let roadGeometry;
+let road;
+
+let ground;
+let groundGeomety;
+
 @Component({
   selector: 'app-plane-model',
   templateUrl: './plane-model.component.html',
@@ -28,7 +34,7 @@ export class PlaneModelComponent implements OnInit {
     geometry = new THREE.BoxGeometry(.5, .7, .3);
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = -100;
+    camera.position.z = -50;
     camera.position.y = 17.60;
     camera.position.x = 69.29;
     camera.rotation.y = 4;
@@ -42,6 +48,7 @@ export class PlaneModelComponent implements OnInit {
     loader = new FBXLoader();
     scene.add(camera);
     scene.add(light);
+    scene.background = new THREE.Color('lightgrey');
     loader.load('assets/a380.fbx', function (object3d) {
       object3d.children.splice(10, 1);
       console.log(object3d);
@@ -49,6 +56,24 @@ export class PlaneModelComponent implements OnInit {
       object3d.scale.set(.01, .01, .01);
 
       scene.add(object3d);
+
+
+      roadGeometry = new THREE.PlaneGeometry(20, 300, 20);
+      road = new THREE.Mesh(roadGeometry, new THREE.MeshLambertMaterial({ color: '#323232'}));
+      road.rotation.set(-Math.PI / 2, Math.PI / 2000, Math.PI);
+      road.position.y = -7;
+      scene.add(road);
+
+      for (let i = 0; i < 1500; i ++) {
+        groundGeomety = new THREE.IcosahedronGeometry(4, 0);
+        ground = new THREE.Mesh(groundGeomety, new THREE.MeshLambertMaterial({ color: 'brown' }));
+        ground.rotation.y = Math.floor(Math.random() * 11);
+        ground.rotation.x = Math.floor(Math.random() * 11);
+        ground.position.y = -10.9;
+        ground.position.z = Math.floor(Math.random() * -200) + 100;
+        ground.position.x = Math.floor(Math.random() * 70);
+        scene.add(ground);
+      }
 
       for (let i = 0; i <= 34; i++) {
         for (let j = 1; j <= 5; j++) {
@@ -96,6 +121,7 @@ export class PlaneModelComponent implements OnInit {
   }
 
   render() {
+    // ground.rotation.x += 0.01;
     renderer.render(scene, camera);
     requestAnimationFrame(this.render.bind(this));
     controls.update();
