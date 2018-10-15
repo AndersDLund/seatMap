@@ -97,12 +97,15 @@ export class PlaneModelComponent implements OnInit {
       sun.position.z = 200;
       scene.add(sun);
 
-      sunlight = new THREE.PointLight('orange', 3, 150);
+      sunlight = new THREE.PointLight('orange', 1, 150);
       // sunlight.position.set(-58, 60, 180);
       sunlight.position.x = -68;
       sunlight.position.y = 50;
       sunlight.position.z = 200;
       scene.add(sunlight);
+
+      // const ambiLight = new THREE.AmbientLight(0x404040); // soft white light
+      // scene.add(ambiLight);
 
       cloudGeometry = new THREE.SphereGeometry(10, 20, 20);
       cloud1 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
