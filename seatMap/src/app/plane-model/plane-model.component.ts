@@ -14,6 +14,7 @@ let box;
 const mouse = new THREE.Vector2();
 let raycaster;
 let INTERSECTED;
+let geometry;
 
 @Component({
   selector: 'app-plane-model',
@@ -21,14 +22,13 @@ let INTERSECTED;
   styleUrls: ['./plane-model.component.scss']
 })
 export class PlaneModelComponent implements OnInit {
-  geometry: any;
 
   constructor() { }
 
   ngOnInit() {
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer();
-    this.geometry = new THREE.BoxGeometry(.5, .7, .3);
+    geometry = new THREE.BoxGeometry(.5, .7, .3);
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = -100;
@@ -48,20 +48,39 @@ export class PlaneModelComponent implements OnInit {
     scene.add(light);
     loader.load('assets/a380.fbx', function (object3d) {
       object3d.children.splice(10, 1);
-      console.log(object3d);
       object3d.scale.set(.01, .01, .01);
 
       scene.add(object3d);
 
-      for (let i = 0; i <= 30; i++) {
+      for (let i = 0; i <= 34; i++) {
         for (let j = 1; j <= 5; j++) {
           box = new THREE.Mesh(new THREE.BoxGeometry(.5, .7, .3), new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
           box.material.emissive.setHex(0x06a01d);
           // box.name = `Seat : ${i + 1}${this.seat}`;
           if (j === 3) {
             continue;
+          } else if (i === 6 || i === 7 || i === 22 || i === 23 || i === 30 || i === 31) {
+            continue;
           } else {
-            box.position.z = i - 12;
+            box.position.z = i - 14.1;
+            box.position.y = 1;
+            box.position.x = j - 3;
+            scene.add(box);
+          }
+        }
+      }
+      for (let i = 0; i <= 37; i++) {
+        for (let j = 1; j <= 5; j++) {
+          box = new THREE.Mesh(new THREE.BoxGeometry(.5, .7, .3), new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors }));
+          box.material.emissive.setHex(0x0b1963);
+          // box.name = `Seat : ${i + 1}${this.seat}`;
+          if (j === 3) {
+            continue;
+          } else if (i === 7 || i === 8 || i === 20 || i === 21 || i === 30 || i === 31) {
+            continue;
+          } else {
+            box.position.z = i - 18.3;
+            box.position.y = -1.6;
             box.position.x = j - 3;
             scene.add(box);
           }
@@ -91,8 +110,6 @@ export class PlaneModelComponent implements OnInit {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
     const currentHex = intersects[0].object.material.emissive.getHex();
-    console.log(currentHex);
-    console.log(intersects);
     if (currentHex !== 727395 && currentHex !== 4276739 && currentHex !== 434205) {
       return;
     }
@@ -103,21 +120,18 @@ export class PlaneModelComponent implements OnInit {
         }
         INTERSECTED = intersects[0].object;
         INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        console.log('intersected', INTERSECTED.currentHex);
         if (currentHex === 727395) {
           // intersects[0].object.callback(INTERSECTED.name);
           return;
         }
         INTERSECTED.material.emissive.setHex(0x123d1e);
-        console.log('post set', INTERSECTED.material.emissive.getHex());
         // intersects[0].object.callback(INTERSECTED.name, intersects[0].object.uuid);
       }
+    } else {
+      if (INTERSECTED) {
+        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+        INTERSECTED = null;
+      }
     }
-    // else {
-    //   if (INTERSECTED) {
-    //     INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-    //     INTERSECTED = null;
-    //   }
-    // }
   }
 }
