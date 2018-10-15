@@ -60,6 +60,8 @@ export class PlaneModelComponent implements OnInit {
     controls.noPan = false;
     controls.noRotate = false;
     controls.noZoom = false;
+    controls.maxDistance = 65;
+    controls.minDistance = 15;
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     light = new THREE.AmbientLight(0x404040, 3);
@@ -104,8 +106,6 @@ export class PlaneModelComponent implements OnInit {
       sunlight.position.z = 200;
       scene.add(sunlight);
 
-      // const ambiLight = new THREE.AmbientLight(0x404040); // soft white light
-      // scene.add(ambiLight);
 
       cloudGeometry = new THREE.SphereGeometry(10, 20, 20);
       cloud1 = new THREE.Mesh(cloudGeometry, new THREE.MeshLambertMaterial({color: 'white'}));
