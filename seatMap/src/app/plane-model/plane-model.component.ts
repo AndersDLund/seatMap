@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as THREE from 'three';
 import * as FBXLoader from 'three-fbx-loader';
 import TrackballControls from 'three-trackballcontrols';
-import OrbitControls from 'three-orbitcontrols';
+import OrbitControls from 'orbit-controls-es6';
 
 let scene;
 let camera;
@@ -22,6 +22,7 @@ let geometry;
   styleUrls: ['./plane-model.component.scss']
 })
 export class PlaneModelComponent implements OnInit {
+  controls: any;
 
   constructor() { }
 
@@ -30,16 +31,18 @@ export class PlaneModelComponent implements OnInit {
     renderer = new THREE.WebGLRenderer();
     geometry = new THREE.BoxGeometry(.5, .7, .3);
 
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = -100;
     camera.position.y = 17.60;
     camera.position.x = 69.29;
     camera.rotation.y = 4;
     raycaster = new THREE.Raycaster();
-    controls = new TrackballControls(camera, renderer.domElement);
-    controls.noPan = false;
-    controls.noRotate = false;
-    controls.noZoom = false;
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.rotateSpeed = 0.5;
+    controls.zoomSpeed = 1.2;
+    controls.panSpeed = 0.8;
+    controls.maxDistance = 110;
+    controls.minDistance = 25;
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     light = new THREE.AmbientLight(0x404040, 3);
